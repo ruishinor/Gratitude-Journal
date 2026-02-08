@@ -233,6 +233,15 @@
             max-width: 800px;     /* Keeps it wider than the prompts, but not full-screen */
             margin-right: auto;   /* Ensures it stays left-aligned relative to your border-left */
         }
+            @media (max-width: 600px) {
+        #prompt-display {
+            font-size: 1.6rem; /* Scaled down further for small screens */
+            margin-bottom: 30px;
+        }
+        .button-group {
+            gap: 12px; /* Tighter gap between buttons */
+        }
+    }
 
     </style>
 </head>
