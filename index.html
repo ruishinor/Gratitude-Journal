@@ -60,19 +60,19 @@
         }
 
         #prompt-display {
-            font-size: 1.9rem;
-            line-height: 1.3;
+            font-size: 1.9rem; /* Reduced from 2.1rem to feel less 'loud' */
+            line-height: 1.3;   /* Tighter spacing for multi-line prompts */
             margin-bottom: 50px;
             min-height: 140px;
             font-weight: 400;
             transition: opacity 0.8s ease;
-    
-            /* The Fixes */
-            max-width: 600px;       /* Keeps lines from getting too long */
-            margin-left: auto;     /* Centers the container */
-            margin-right: auto;    /* Centers the container */
-            text-wrap: balance;    /* Automatically balances the words per line */
-        }
+            
+            /* The Balancing Magic */
+            max-width: 600px;   /* Prevents the text from stretching too wide on desktop */
+            margin-left: auto;  /* Centers the text block */
+            margin-right: auto; /* Centers the text block */
+            text-wrap: balance; /* Ensures 2-line prompts are even/balanced */
+}
 
         .button-group {
             display: flex;
@@ -99,7 +99,7 @@
         .btn-subtle {
             background: none; border: none; font-family: 'Lora', serif;
             font-style: italic; color: var(--accent-color);
-            text-decoration: underline; cursor: pointer; font-size: 0.95rem;
+            text-decoration: underline; cursor: pointer; font-size: 1.1rem;
         }
 
         .stats-bar {
@@ -133,11 +133,12 @@
             font-family: 'Inter', sans-serif; 
             font-size: 1.5rem; 
             text-transform: uppercase; 
-            letter-spacing: 2px; 
+            letter-spacing: 0.15px; 
             color: var(--accent-color); 
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            font-weight: 600;
         }
-        .about-section p { font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px; }
+        .about-section p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 40px; font-weight: 400; }
         .about-section a { color: var(--text-color); text-decoration: underline; }
 
         textarea { 
@@ -149,7 +150,7 @@
         padding: 10px 0; 
         font-family: 'Lora', serif; 
         font-size: 1.3rem; /* Slightly larger for a more personal feel */
-        line-height: 1.8; /* More space between lines of text */
+        line-height: 1.7; /* More space between lines of text */
         color: var(--text-color);
         margin-bottom: 30px; 
         box-sizing: border-box; 
@@ -201,37 +202,38 @@
         .support-link:hover { opacity: 1; text-decoration: underline; }
 
         .blur { filter: blur(10px); opacity: 0.2; pointer-events: none; }
-    
-        @media (max-width: 600px) {
-    body {
-        /* Allow the page to scroll naturally if the content is too tall for the screen */
-        justify-content: flex-start; 
-        padding-top: 80px; 
-        padding-bottom: 180px; 
-        overflow-y: auto; 
-    }
 
-    #prompt-display {
-        font-size: 1.6rem; /* Slightly smaller for mobile readability */
-        margin-bottom: 30px;
-    }
-
-    .button-group {
-        margin-bottom: 40px;
-        gap: 12px;
-    }
-
-    footer {
-        /* Keep it at the bottom but give it a solid background so text doesn't bleed through */
-        background-color: var(--bg-color);
-        padding-top: 20px;
-        padding-bottom: 20px;
-        position: fixed; 
-        bottom: 0;
-        left: 0;
-        width: 100%;
-    }
+        /* Gallery Styling Hierarchy */
+        .gallery-entry {
+            margin-bottom: 60px;
+            border-left: 2px solid #eee;
+            padding-left: 25px;
         }
+
+        .gallery-reflecting-on {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .gallery-answer {
+            display: block;
+            font-family: 'Lora', serif;
+            font-size: 1.4rem;
+            color: var(--text-color);
+            font-style: italic;
+            line-height: 1.6;
+
+    /* The Balancing Fix */
+            text-wrap: balance;   /* Distributes words evenly to avoid orphans */
+            max-width: 800px;     /* Keeps it wider than the prompts, but not full-screen */
+            margin-right: auto;   /* Ensures it stays left-aligned relative to your border-left */
+        }
+
     </style>
 </head>
 <body>
@@ -252,11 +254,11 @@
 
     <div id="aboutOverlay" class="overlay">
         <div class="overlay-content">
-        <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-        
-        <div class="about-section">
+            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
+            
+            <div class="about-section">
             <h2>About</h2>
-            <p><strong>The Gratitude Journal</strong> is an easy-to-reach space to reduce stress, break the spiral if one has started, and create a moment for positive reflection. By taking the time to answer just one of these questions, you can shift your mindset from what you don't have to what you do have. This site exists as a reminder that even in difficult times, there are small things worth noticing.</p>
+            <p><italic>The Gratitude Journal</italic> is an easy-to-reach space to reduce stress, break a spiral of negative thoughts if one has started, and create a moment for positive reflection. By taking the time to answer just one of these questions, you can shift your mindset from what you don't have to what you do have. This site exists as a reminder that even in difficult times, there are small things worth noticing.</p>
             <p>Every prompt you see on this site was chosen to help shift your focus away from what might be lacking and toward the good things you already have. There are 90 different prompts in this collection, all pulled directly from <a href="https://ruishinor.gumroad.com/" target="_blank"><em>The Complete Gratitude Workbook</em></a>.</p>
         </div>
 
@@ -280,7 +282,7 @@
     <div id="reflectOverlay" class="overlay">
         <div class="overlay-content">
             <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-            <span style="font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent-color);">reflection</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 1.8rem; text-transform: uppercase; color: var(--accent-color);">reflection</span>
             <div id="locked-prompt" style="font-size: 1.5rem; margin: 15px 0 30px 0; font-style: italic;"></div>
             <form action="https://formspree.io/f/xdaloqzj" method="POST">
                 <input type="hidden" name="prompt" id="hidden-prompt-input">
@@ -293,7 +295,7 @@
     <div id="feedbackOverlay" class="overlay">
         <div class="overlay-content">
             <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-            <h2 style="font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-color);">Give Feedback</h2>
+            <h2 style="font-family: 'Inter', sans-serif; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-color);">Give Feedback</h2>
             <p style="margin-bottom: 30px;">How do you think we can make this space better?</p>
             <form action="https://formspree.io/f/mqedazqy" method="POST">
                 <textarea name="feedback" placeholder="Your thoughts..." required></textarea>
@@ -484,6 +486,21 @@
         }
 
         function openGallery() {
+            const galleryList = document.getElementById('gallery-list');
+            galleryList.innerHTML = '';
+
+            galleryEntries.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'gallery-entry';
+
+                entryDiv.innerHTML = `
+                    <span class="gallery-reflecting-on">Reflecting on ... ${entry.prompt}</span>
+                    <span class="gallery-answer">"${entry.answer}"</span>
+                `;
+
+                galleryList.appendChild(entryDiv);
+            });
+
             document.getElementById('galleryOverlay').style.display = 'block';
             document.getElementById('main-container').classList.add('blur');
         }
