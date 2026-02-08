@@ -86,7 +86,7 @@
             border: 1px solid var(--accent-color);
             padding: 14px 34px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             letter-spacing: 0.1em;
             color: var(--text-color);
             cursor: pointer;
@@ -282,7 +282,7 @@
     <div id="reflectOverlay" class="overlay">
         <div class="overlay-content">
             <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-            <span style="font-family: 'Inter', sans-serif; font-size: 1.8rem; text-transform: uppercase; color: var(--accent-color);">reflection</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent-color);">reflection</span>
             <div id="locked-prompt" style="font-size: 1.5rem; margin: 15px 0 30px 0; font-style: italic;"></div>
             <form action="https://formspree.io/f/xdaloqzj" method="POST">
                 <input type="hidden" name="prompt" id="hidden-prompt-input">
@@ -296,7 +296,7 @@
         <div class="overlay-content">
             <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
             <h2 style="font-family: 'Inter', sans-serif; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-color);">Give Feedback</h2>
-            <p style="margin-bottom: 30px;">How do you think we can make this space better?</p>
+            <p style="margin-bottom: 30px;">How do you feel we can make this space better?</p>
             <form action="https://formspree.io/f/mqedazqy" method="POST">
                 <textarea name="feedback" placeholder="Your thoughts..." required></textarea>
                 <button type="submit" class="btn">Send Feedback</button>
@@ -307,14 +307,14 @@
     <div id="galleryOverlay" class="overlay">
         <div class="overlay-content">
             <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Back</button>
-            <h2 style="font-weight: 400; margin-bottom: 50px; font-size: 1.8rem;">Community Reflections</h2>
+            <h2 style="font-weight: 400; margin-bottom: 50px; font-size: 1.8rem;">Community Notes</h2>
             <div id="gallery-list"></div>
         </div>
     </div>
 
     <footer>
         <div class="footer-links">
-            <a href="javascript:void(0)" onclick="openGallery()">Read Reflections</a>
+            <a href="javascript:void(0)" onclick="openGallery()">Read Community Notes</a>
             <a href="https://ruishinor.gumroad.com/" target="_blank">The Full Journal</a>
             <a href="javascript:void(0)" onclick="openFeedback()">Give Feedback</a>
         </div>
@@ -473,20 +473,24 @@
             document.getElementById('hidden-prompt-input').value = currentPromptText;
             document.getElementById('reflectOverlay').style.display = 'block';
             document.getElementById('main-container').classList.add('blur');
+            history.pushState({overlay: true}, ""); // Add this line
         }
 
         function openFeedback() {
             document.getElementById('feedbackOverlay').style.display = 'block';
             document.getElementById('main-container').classList.add('blur');
+            history.pushState({overlay: true}, ""); // Add this line
         }
 
         function openAbout() {
             document.getElementById('aboutOverlay').style.display = 'block';
             document.getElementById('main-container').classList.add('blur');
+            history.pushState({overlay: true}, ""); // Add this line
         }
 
         function openGallery() {
             const galleryList = document.getElementById('gallery-list');
+            history.pushState({overlay: true}, ""); // Add this line
             galleryList.innerHTML = '';
 
             galleryEntries.forEach(entry => {
@@ -514,6 +518,9 @@
         }
 
         window.onload = getRandomPrompt;
+        window.onpopstate = function() {
+        closeAllOverlays(false); // Close without adding another history state
+    };
     </script>
 </body>
 </html>
