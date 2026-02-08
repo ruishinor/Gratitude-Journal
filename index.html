@@ -33,6 +33,7 @@
             text-align: center;
             padding: 0;
             overflow: hidden; /* Prevents landing page scroll */
+            overflow-y: auto; /* Allow scrolling if the phone is very small */
         }
 
         /* Top Navigation */
@@ -233,8 +234,8 @@
             max-width: 800px;     /* Keeps it wider than the prompts, but not full-screen */
             margin-right: auto;   /* Ensures it stays left-aligned relative to your border-left */
         }
-            @media (max-width: 600px) {
-        #prompt-display {
+        @media (max-height: 700px) and (max-width: 600px) {
+            #prompt-display {
             font-size: 1.6rem; /* Scaled down further for small screens */
             margin-bottom: 30px;
         }
