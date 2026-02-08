@@ -201,7 +201,36 @@
         .support-link:hover { opacity: 1; text-decoration: underline; }
 
         .blur { filter: blur(10px); opacity: 0.2; pointer-events: none; }
+    
+        @media (max-width: 600px) {
+    body {
+        /* Allow the page to scroll naturally if the content is too tall for the screen */
+        justify-content: flex-start; 
+        padding-top: 80px; 
+        padding-bottom: 180px; 
+        overflow-y: auto; 
+    }
 
+    #prompt-display {
+        font-size: 1.8rem; /* Slightly smaller for mobile readability */
+        margin-bottom: 30px;
+    }
+
+    .button-group {
+        margin-bottom: 40px;
+    }
+
+    footer {
+        /* Keep it at the bottom but give it a solid background so text doesn't bleed through */
+        background-color: var(--bg-color);
+        padding-top: 20px;
+        padding-bottom: 20px;
+        position: fixed; 
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+        }
     </style>
 </head>
 <body>
