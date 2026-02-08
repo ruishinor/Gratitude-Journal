@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reasons for Gratitude</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400&display=swap');
+
+        :root {
+            --bg-color: #fdfcf8;
+            --text-color: #1a1a1a;
+            --accent-color: #8e9794;
+            --overlay-bg: rgba(253, 252, 248, 0.99);
+            --show-visitors: none; 
+            --show-notes: flex;
+        }
+
+        /* 1. Fix Scrolling: Set height to 100vh and hide overflow */
+        body {
+            margin: 0;
+            font-family: 'Lora', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0;
+            overflow: hidden; /* Prevents landing page scroll */
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 750px;
+            width: 90%;
+            transition: filter 0.5s ease;
+            margin-top: -50px; /* Slight offset for visual balance with footer */
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            color: var(--accent-color);
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
+
+        #prompt-display {
+            font-size: 2.1rem;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            min-height: 140px;
+            font-weight: 400;
+            transition: opacity 0.8s ease;
+    
+            /* The Fixes */
+            max-width: 600px;       /* Keeps lines from getting too long */
+            margin-left: auto;     /* Centers the container */
+            margin-right: auto;    /* Centers the container */
+            text-wrap: balance;    /* Automatically balances the words per line */
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--accent-color);
+            padding: 14px 34px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover { background-color: var(--text-color); color: white; border-color: var(--text-color); }
+
+        .btn-subtle {
+            background: none; border: none; font-family: 'Lora', serif;
+            font-style: italic; color: var(--accent-color);
+            text-decoration: underline; cursor: pointer; font-size: 0.95rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-item { flex-direction: column; align-items: center; }
+        .stat-val { font-size: 1.2rem; font-weight: 400; color: var(--text-color); }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-color); margin-top: 5px; }
+
+        .stat-visitors { display: var(--show-visitors); }
+        .stat-notes { display: var(--show-notes); }
+
+        /* Overlays */
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--overlay-bg); z-index: 1000;
+            padding: 60px 20px; box-sizing: border-box; text-align: left; overflow-y: auto;
+        }
+
+        .overlay-content { max-width: 600px; margin: 0 auto; }
+
+        .about-section { margin-bottom: 40px; }
+        .about-section h2 { 
+            font-family: 'Inter', sans-serif; 
+            font-size: 1.5rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: var(--accent-color); 
+            margin-bottom: 15px;
+        }
+        .about-section p { font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px; }
+        .about-section a { color: var(--text-color); text-decoration: underline; }
+
+        textarea { 
+        width: 100%; 
+        height: 300px; 
+        background: transparent; /* Removes the white box */
+        border: none; 
+        border-bottom: 1px solid #e0ddd5; /* A single, soft horizontal line */
+        padding: 10px 0; 
+        font-family: 'Lora', serif; 
+        font-size: 1.3rem; /* Slightly larger for a more personal feel */
+        line-height: 1.8; /* More space between lines of text */
+        color: var(--text-color);
+        margin-bottom: 30px; 
+        box-sizing: border-box; 
+        resize: none; 
+        outline: none; 
+        transition: border-color 0.4s ease;
+        }
+
+        textarea::placeholder {
+        color: var(--accent-color);
+        opacity: 0.4;
+        font-style: italic;
+        }
+
+        textarea:focus {
+        border-bottom: 1px solid var(--accent-color); /* The line darkens slightly when you write */
+        }
+        /* Footer Redesign */
+        footer { 
+            position: fixed; 
+            bottom: 30px; 
+            width: 100%; 
+            text-align: center;
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.7rem; 
+            color: var(--accent-color); 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-links { display: flex; justify-content: center; gap: 20px; }
+        footer a { color: var(--accent-color); text-decoration: none; transition: opacity 0.2s; }
+        footer a:hover { opacity: 0.7; }
+
+        .share-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .share-text { font-size: 0.65rem; letter-spacing: 1px; opacity: 0.8; }
+
+        .share-icons { display: flex; gap: 18px; font-size: 1.1rem; }
+        .share-icons a { color: var(--accent-color); }
+
+        .support-link { opacity: 0.7; font-style: italic; font-size: 0.65rem; margin-top: 5px; }
+        .support-link:hover { opacity: 1; text-decoration: underline; }
+
+        .blur { filter: blur(10px); opacity: 0.2; pointer-events: none; }
+
+    </style>
+</head>
+<body>
+
+    <nav class="top-nav">
+        <button class="btn-subtle" onclick="openAbout()">About</button>
+    </nav>
+
+    <div class="container" id="main-container">
+        <h1>Reasons for Gratitude</h1>
+        <div id="prompt-display">...</div>
+        
+        <div class="button-group">
+            <button class="btn" onclick="getRandomPrompt()">Get Another Prompt</button>
+            <button class="btn-subtle" onclick="openReflect()">Reflect on this</button>
+        </div>
+    </div>
+
+    <div id="aboutOverlay" class="overlay">
+        <div class="overlay-content">
+        <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
+        
+        <div class="about-section">
+            <h2>About</h2>
+            <p><strong>Reasons for Gratitude</strong> is an easy-to-reach space to reduce stress, break the spiral if one has started, and create a moment for positive reflection. By taking the time to answer just one of these questions, you can shift your mindset from what you don't have to what you do have. This site exists as a reminder that even in difficult times, there are small things worth noticing.</p>
+            <p>Every prompt you see on this site was chosen to help shift your focus away from what might be lacking and toward the good things we already have. There are 90 different prompts in this collection, all pulled directly from <a href="https://ruishinor.gumroad.com/" target="_blank"><em>The Complete Gratitude Workbook</em></a>.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>Why this space exists</h2>
+            <p>Life can feel overwhelming and difficult. It's easy to get stuck in a negative spiral once our thoughts have started going in a negative direction. But here's the thing. Research shows that practicing gratitude isn't just a "nice idea". It can actually change our brain chemistry and improve both our mood and health by focusing our attention on the positive.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>Help others</h2>
+            <p>You don’t have to write and submit your personal reflections on the site. But if you do choose to submit a reflection, it might be shared with the community. Your words could be exactly what someone else needs to read to get through a hard moment in the future.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>Support</h2>
+            <p>All submitted reflections are reviewed to ensure this remains a safe and supportive space for everyone. If you are struggling right now, please know that you are not alone. Get some air. Go for a walk. Call someone, and talk about anything at all. That connection with another person can change everything</a>, and shifting your physical environment can too.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="reflectOverlay" class="overlay">
+        <div class="overlay-content">
+            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
+            <span style="font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent-color);">reflection</span>
+            <div id="locked-prompt" style="font-size: 1.5rem; margin: 15px 0 30px 0; font-style: italic;"></div>
+            <form action="https://formspree.io/f/xdaloqzj" method="POST">
+                <input type="hidden" name="prompt" id="hidden-prompt-input">
+                <textarea name="reflection" placeholder="Write your reflection here..." required></textarea>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="feedbackOverlay" class="overlay">
+        <div class="overlay-content">
+            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
+            <h2 style="font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-color);">Give Feedback</h2>
+            <p style="margin-bottom: 30px;">How do you think we can make this space better?</p>
+            <form action="https://formspree.io/f/mqedazqy" method="POST">
+                <textarea name="feedback" placeholder="Your thoughts..." required></textarea>
+                <button type="submit" class="btn">Send Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="galleryOverlay" class="overlay">
+        <div class="overlay-content">
+            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Back</button>
+            <h2 style="font-weight: 400; margin-bottom: 50px; font-size: 1.8rem;">Community Reflections</h2>
+            <div id="gallery-list"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="javascript:void(0)" onclick="openGallery()">Read Reflections</a>
+            <a href="https://ruishinor.gumroad.com/" target="_blank">The Full Journal</a>
+            <a href="javascript:void(0)" onclick="openFeedback()">Give Feedback</a>
+        </div>
+
+        <div class="share-section">
+            <span class="share-text">Help us reach more people by sharing this site</span>
+            <div class="share-icons">
+                <a href="javascript:void(0)" onclick="socialShare('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('x')" title="Share on X"><i class="fab fa-x-twitter"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('linkedin')" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('copy')" title="Copy Link"><i class="fa fa-link"></i></a>
+            </div>
+        </div>
+
+        <a href="https://buymeacoffee.com/ruishinor" target="_blank" class="support-link">Want to support this work? Buy me a coffee</a>
+    </footer>
+
+    <script>
+        const prompts = [
+            "What is a lesson you are thankful you learned?",
+            "What is one event in the future you are looking forward to, and why?",
+            "Write a short letter to your future self. What would you want that person to remember?",
+            "What are three things at home that help you take care of yourself?",
+            "What helps you feel healthy and well?",
+            "What is something that you feel grateful to have experienced?",
+            "What is one habit specific that improves your physical health?",
+            "Name five things your past self would be proud of in your life today.",
+            "Describe a recent moment when your natural strengths showed clearly, when your talents really got to click into place.",
+            "What is a meaningful gift you received recently?",
+            "Recall a specific moment you felt perfectly understood by someone. What happened?",
+            "Write down three of the happiest moments you can think of.",
+            "Who is someone that makes your life better? How do they do that?",
+            "What is one thing someone does for you that you feel grateful for?",
+            "Think of someone you love. What do you appreciate most about them today?",
+            "How do you usually show appreciation to others?",
+            "What is a small way you and a friend show you care about each other?",
+            "Name three people that always can put a smile on your face.",
+            "Describe a favorite memory with someone important to you.",
+            "Recall a recent gesture that made you feel loved.",
+            "How has a friend supported or inspired you lately?",
+            "What is a recent compliment you received that made you feel good?",
+            "Choose a recent photo that makes you smile. Describe it. What is happening in it?",
+            "Right now, what does feeling “well” or “secure” feel like in your body?",
+            "How has a family member or close friend supported you in an important way?",
+            "What is one positive experience that changed your life in a meaningful way?",
+            "Describe a recent conversation that left you feeling good.",
+            "How does movement or exercise affect your mood?",
+            "What are you learning about yourself right now?",
+            "Who is someone you cannot imagine life without?",
+            "If you could send one sentence into the future, what would it say?",
+            "What is something you tried for the first time recently?",
+            "What positive feelings did you notice today?",
+            "Who is someone you have never met, but who has helped you in some way?",
+            "What is something beautiful you saw today?",
+            "When did you last feel awe or wonder?",
+            "What is something valuable you learned today?",
+            "Describe your perfect rainy day using your senses. What do you hear, smell, and see?",
+            "How has practicing gratitude been changing your thoughts lately?",
+            "Write a short thank-you note to someone you're thinking of.",
+            "What is something you recently finished that you feel proud of?",
+            "What is something that always can make you happy, even on hard days?",
+            "When was the last time someone thanked you? What was it for?",
+            "What are you struggling with right now? Write yourself one encouraging, kind sentence as if to a friend.",
+            "What is something you appreciate about the time you live in now?",
+            "Acknowledge your inner strength by remembering a time it carried you through something hard.",
+            "Recall a recent moment when someone was kind to you.",
+            "Look around you. What is one small object you are grateful for?",
+            "Describe a recent moment when you felt completely at peace.",
+            "Recall a time you felt grateful for something a loved one did.",
+            "Name one positive thing from today, even if it was small.",
+            "Write a short thank-you note to yourself for something you handled well.",
+            "What is one small thing you look forward to or hope for this week?",
+            "Imagine your life one year from now. What is the most important change?",
+            "List five tools or items that make daily life easier.",
+            "What are three good things you have today that you didn’t have five years ago?",
+            "Describe a recent time where you made use of your natural strengths.",
+            "What is an achievement you are truly proud of?",
+            "What do you need more of right now? What is one small step toward it?",
+            "What would you hope your future self understands about this period of your life?",
+            "What is a skill you have that might surprise people?",
+            "What is one way you have grown recently?",
+            "Describe yourself using five positive words.",
+            "When did you last feel you didn’t have to pretend? What do you value about that moment?",
+            "What would a perfect day look like for you?",
+            "What is your favorite part of everyday life?",
+            "What is one of the qualities in your personality that you appreciate?",
+            "How do you hope people close to you experience you?",
+            "What activity brings you the most joy? Why?",
+            "What is one thing you appreciate about your body?",
+            "Recall a time you stood up for someone or took a stand for something that mattered to you.",
+            "What does true happiness mean to you?",
+            "Describe to a stranger who you are in exactly 20 words.",
+            "Which part of your day do you look forward to the most?",
+            "List three small things that help you relax or breathe easier.",
+            "What place would you love to visit again? Why is that?",
+            "Forgive yourself for one thing. What changes when you do?",
+            "Describe a favorite childhood memory. What detail stands out most?",
+            "What life lesson shaped who you are today?",
+            "What song always lifts your mood?",
+            "What part of your health are you grateful for today?",
+            "What is one important thing you learned about yourself this year?",
+            "If you could steer the coming week, what would be one intention you would set?",
+            "Remember a time you did better than you expected.",
+            "What are you learning about yourself right now?",
+            "Who would you call in an emergency? Why?",
+            "Describe a small act of kindness you did recently.",
+            "What is a boundary you recently set to protect your peace?",
+            "What is one of the most important pieces of advice you have received?",
+            "What would you tell your 15-year-old self today?"
+        ];
+
+        const galleryEntries = [
+            { prompt: "What is a lesson you are thankful you learned?", answer: "That 'no' is a complete sentence. Protecting my own space, energy, and peace isn't selfish; it's how I can keep helping others, and myself too." },
+            { prompt: "What would you tell your 15-year-old self today?", answer: "It will get so much better. You will find a group of people who love you for the very things that some people say are strange and different." },
+            { prompt: "Who is someone that makes your life better?", answer: "The person that checks in on me regularly with a phone call where we just talk about anything and everything. The person that I still have a deep connection with even without meeting for years now. Neither of them will probably ever understand it fully, but they make ... such a .. huge difference." },
+            { prompt: "What is something beautiful you saw today?", answer: "The rain. The sound of it, the smell of it, the way it makes everything look and feel. It makes me feel calm and connected to the world around me." },
+            { prompt: "What is a lesson you are thankful you learned?", answer: "..all the hard ones. [sigh] ... because they are, in the end ..important. Impactful. Even if they were hard to learn." },
+            { prompt: "Who is someone that makes your life better?", answer: "My neighbor. She always waves and checks in on my cat when I'm away. Her open kindness makes me feel less alone in the world." },
+            { prompt: "What would you tell your 15-year-old self today?", answer: "Things will change. Things .. get better. It's going to take some time, but that time and all that you experience is how you become who you need to be, and ultimately, who you want to be. Trust in yourself and the process, even when it feels like nothing is changing. You are growing in ways you can't see yet." },
+        ];
+
+        let currentPromptText = "";
+
+        function getRandomPrompt() {
+            const display = document.getElementById('prompt-display');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                currentPromptText = prompts[randomIndex];
+                display.innerText = currentPromptText;
+                display.style.opacity = 1;
+            }, 600);
+        }
+
+        function socialShare(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent(`I found this digital space for gratitude. Today's prompt: "${currentPromptText}"`);
+            
+            let shareUrl = "";
+            switch(platform) {
+                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case 'x': shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; break;
+                case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`; break;
+                case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'copy':
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Link copied to clipboard!");
+                    return;
+            }
+            if(shareUrl) window.open(shareUrl, '_blank');
+        }
+
+        function openReflect() {
+            document.getElementById('locked-prompt').innerText = currentPromptText;
+            document.getElementById('hidden-prompt-input').value = currentPromptText;
+            document.getElementById('reflectOverlay').style.display = 'block';
+            document.getElementById('main-container').classList.add('blur');
+        }
+
+        function openFeedback() {
+            document.getElementById('feedbackOverlay').style.display = 'block';
+            document.getElementById('main-container').classList.add('blur');
+        }
+
+        function openAbout() {
+            document.getElementById('aboutOverlay').style.display = 'block';
+            document.getElementById('main-container').classList.add('blur');
+        }
+
+        function openGallery() {
+            document.getElementById('galleryOverlay').style.display = 'block';
+            document.getElementById('main-container').classList.add('blur');
+        }
+
+        function closeAllOverlays() {
+            document.getElementById('reflectOverlay').style.display = 'none';
+            document.getElementById('galleryOverlay').style.display = 'none';
+            document.getElementById('aboutOverlay').style.display = 'none';
+            document.getElementById('feedbackOverlay').style.display = 'none';
+            document.getElementById('main-container').classList.remove('blur');
+        }
+
+        window.onload = getRandomPrompt;
+    </script>
+</body>
+</html>
