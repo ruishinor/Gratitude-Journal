@@ -93,6 +93,8 @@
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
+            box-sizing: border-box;
+            max-width: 100%;
         }
 
         .btn:hover { background-color: var(--text-color); color: white; border-color: var(--text-color); }
@@ -170,7 +172,10 @@
         border-bottom: 1px solid var(--accent-color); /* The line darkens slightly when you write */
         }
         /* Footer Redesign */
-        footer { 
+        footer {
+            left: 0;
+            right: 0;
+            box-sizing: border-box; 
             position: fixed; 
             bottom: 30px; 
             width: 100%; 
@@ -257,8 +262,8 @@
         <div id="prompt-display">...</div>
         
         <div class="button-group">
+            <button class="btn" onclick="openReflect()">Reflect on this</button>
             <button class="btn" onclick="getRandomPrompt()">Get Another Prompt</button>
-            <button class="btn-subtle" onclick="openReflect()">Reflect on this</button>
         </div>
     </div>
 
@@ -279,12 +284,14 @@
 
         <div class="about-section">
             <h2>Help others</h2>
-            <p>You don’t have to write and submit your personal reflections on the site. But if you do choose to submit a reflection, it might be shared with the community. Your words could be exactly what someone else needs to read to get through a hard moment in the future.</p>
+            <p>You are not required to write and submit your personal reflections on this website. But if you do choose to submit a reflection, it might be shared with the community. 
+            <p>Your reflections on life could be exactly what someone else needs to read to get inspired or to get through a difficult time.</p>
+            <p>All submissions are reviewed and may be lightly edited to make sure they're ready to be published. <b>>So hey, don't overthink your entries. They don't have to be perfect. They just have to be real.</b></p>
         </div>
 
         <div class="about-section">
             <h2>Support</h2>
-            <p>All submitted reflections are reviewed to ensure this remains a safe and supportive space for everyone. If you are struggling right now, please know that you are not alone. Get some air. Go for a walk. Call someone, and talk about anything at all. That connection with another person can change everything</a>, and shifting your physical environment can too.</p>
+            <p>If you are struggling right now, please know that you are not alone. Get some air. Go for a walk. Call someone, and talk about anything at all. That connection with another person can change everything</a>, and shifting your physical environment can too.</p>
             </div>
         </div>
     </div>
@@ -325,7 +332,7 @@
     <footer>
         <div class="footer-links">
             <a href="javascript:void(0)" onclick="openGallery()">Read Community Notes</a>
-            <a href="https://ruishinor.gumroad.com/" target="_blank">The Full Journal</a>
+            <a href="https://ruishinor.gumroad.com/" target="_blank">The Complete Gratitude Workbook</a>
             <a href="javascript:void(0)" onclick="openFeedback()">Give Feedback</a>
         </div>
 
