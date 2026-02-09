@@ -18,7 +18,7 @@
             --show-notes: flex;
         }
 
-        /* 1. Fix Scrolling: Set height to 100vh and hide overflow */
+        /* 1. Previous Fix for Scrolling: Set height to 100vh and hide overflow. Replaced with 100svh */
         body {
             margin: 0;
             font-family: 'Lora', serif;
@@ -26,12 +26,10 @@
             color: var(--text-color);
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100svh; /* Use svh for better mobile support */
             width: 100vw;
             align-items: center;
-            justify-content: center;
             text-align: center;
-            padding: 0;
             overflow: hidden; /* Prevents landing page scroll */
         }
 
@@ -46,8 +44,8 @@
         .container {
             max-width: 750px;
             width: 90%;
+            margin: auto 0; /* vertical centering */
             transition: filter 0.5s ease;
-            margin-top: -50px; /* Slight offset for visual balance with footer */
         }
 
         h1 {
@@ -127,7 +125,13 @@
             background-color: var(--overlay-bg); z-index: 1000;
             padding: 60px 20px; box-sizing: border-box; text-align: left; overflow-y: auto;
         }
-
+        .copyright {
+            font-family: 'Inter', sans-serif; 
+            font-size: 0.6rem; 
+            color: var(--accent-color); 
+            margin-top: 10px;
+            opacity: 0.6;
+        }
         .overlay-content { max-width: 600px; margin: 0 auto; }
 
         .about-section { margin-bottom: 40px; }
@@ -175,8 +179,9 @@
             left: 0;
             right: 0;
             box-sizing: border-box; 
-            position: fixed; 
-            bottom: 30px; 
+            position: static; /* Changed from fixed to static for better mobile experience */
+            margin-top: auto; /* Pushes the footer to the bottom of the page */
+            padding-bottom: 30px; 
             width: 100%; 
             text-align: center;
             font-family: 'Inter', sans-serif; 
@@ -368,7 +373,7 @@
             <label>Do you think you'll come back again in the future?</label>
             <select name="return_intent">
                 <option value="" selected>Choose one...</option>
-                <option value="Yes: Likely to return">Yes, I'll likely come back</option>
+                <option value="Yes: Likely to return">Yes, I'll probably come back</option>
                 <option value="Maybe: If needed">Maybe when I'm feeling stressed</option>
                 <option value="No: Unlikely">Probably not</option>
             </select>
@@ -405,7 +410,12 @@
             </div>
         </div>
 
-        <a href="https://buymeacoffee.com/ruishinor" target="_blank" class="support-link">Want to support this work?</a>
+        <a href="https://buymeacoffee.com/ruishinor" target="_blank" class="support-link">If you want to support this work, you can do that [here].</a>
+        
+        <div class="copyright">
+            © <span id="year"></span> The Gratitude Journal | All Rights Reserved.
+        </div>
+
     </footer>
 
     <script>
@@ -590,6 +600,7 @@
             document.getElementById('aboutOverlay').style.display = 'none';
             document.getElementById('feedbackOverlay').style.display = 'none';
             document.getElementById('main-container').classList.remove('blur');
+            document.getElementById('year').textContent = new Date().getFullYear();
         }
 
         window.onload = getRandomPrompt;
