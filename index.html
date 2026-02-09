@@ -286,12 +286,13 @@
             <h2>Help others</h2>
             <p>You are not required to write and submit your personal reflections on this website. But if you do choose to submit a reflection, it might be shared with the community. 
             <p>Your reflections on life could be exactly what someone else needs to read to get inspired or to get through a difficult time.</p>
-            <p>All submissions are reviewed and may be lightly edited to make sure they're ready to be published. <b>>So hey, don't overthink your entries. They don't have to be perfect. They just have to be real.</b></p>
+            <p>All submissions are reviewed and may be lightly edited to make sure they're ready to be published. So hey, don't overthink your entries. They don't have to be perfect. They just have to be real.</b></p>
         </div>
 
         <div class="about-section">
             <h2>Support</h2>
-            <p>If you are struggling right now, please know that you are not alone. Get some air. Go for a walk. Call someone, and talk about anything at all. That connection with another person can change everything</a>, and shifting your physical environment can too.</p>
+            <p>If you are struggling right now, please know that you are not alone.<br>Get some air. Go for a walk. Call someone and talk about anything at all.</br>That connection with another person? That can change <italic>everything</italic>, and shifting your physical environment can too.</p>
+            <p>This website was created by <a href="https://www.instagram.com/bastard_bearded/" target="_blank"><em>Alexander Holf</em></a>,</p>
             </div>
         </div>
     </div>
@@ -310,14 +311,37 @@
     </div>
 
     <div id="feedbackOverlay" class="overlay">
-        <div class="overlay-content">
-            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-            <h2 style="font-family: 'Inter', sans-serif; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-color);">Give Feedback</h2>
-            <p style="margin-bottom: 30px;">How do you feel we can make this space better?</p>
-            <form action="https://formspree.io/f/mqedazqy" method="POST">
-                <textarea name="feedback" placeholder="Your thoughts..." required></textarea>
-                <button type="submit" class="btn">Send Feedback</button>
-            </form>
+    <div class="overlay-content">
+        <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
+        
+        <div class="section">
+            <h2>Feedback</h2>
+            <p>Thanks for sharing your thoughts with us and helping us improve the site. This is anonymous.</p>
+        </div>
+
+        <form action="https://formspree.io/f/mqedazqy" method="POST">
+            
+            <label>How was your experience using the site today?</label>
+            <select name="user_experience">
+                <option value="" selected>Choose an option...</option>
+                <option value="Positive: Good">I feel a bit better / calmer</option>
+                <option value="Positive: Useful">I found the prompt useful</option>
+                <option value="Neutral: Just curious">I was just curious about the site</option>
+                <option value="Negative: Not for me">I feel a bit worse</option>
+            </select>
+
+            <label>Do you think you'll come back again in the future?</label>
+            <select name="return_intent">
+                <option value="" selected>Choose one...</option>
+                <option value="Yes: Likely to return">Yes, I'll likely come back</option>
+                <option value="Maybe: If needed">Maybe when I'm feeling stressed</option>
+                <option value="No: Unlikely">Probably not</option>
+            </select>
+        
+            <label>Is there anything else you'd like to share?</label>
+            <textarea name="additional_feedback" placeholder="Your thoughts..."></textarea>            
+            <button type="submit" class="btn">Send Feedback</button>
+        </form>
         </div>
     </div>
 
@@ -332,7 +356,6 @@
     <footer>
         <div class="footer-links">
             <a href="javascript:void(0)" onclick="openGallery()">Read Community Notes</a>
-            <a href="https://ruishinor.gumroad.com/" target="_blank">The Complete Gratitude Workbook</a>
             <a href="javascript:void(0)" onclick="openFeedback()">Give Feedback</a>
         </div>
 
@@ -397,7 +420,7 @@
             "When was the last time someone thanked you? What was it for?",
             "What are you struggling with right now? Write yourself one encouraging, kind sentence as if to a friend.",
             "What is something you appreciate about the time you live in now?",
-            "Acknowledge your inner strength by remembering a time it carried you through something hard.",
+            "Acknowledge your inner strength by remembering a time it carried you through something difficult.",
             "Recall a recent moment when someone was kind to you.",
             "Look around you. What is one small object you are grateful for?",
             "Describe a recent moment when you felt completely at peace.",
@@ -410,12 +433,12 @@
             "What are three good things you have today that you didn’t have five years ago?",
             "Describe a recent time where you made use of your natural strengths.",
             "What is an achievement you are truly proud of?",
-            "What do you need more of right now? What is one small step toward it?",
+            "What do you need more of right now? What is one small step toward that?",
             "What would you hope your future self understands about this period of your life?",
             "What is a skill you have that might surprise people?",
             "What is one way you have grown as a person recently?",
             "Describe yourself using five positive words.",
-            "When did you last feel you didn’t have to pretend? What do you value about that moment?",
+            "When did you last feel you didn’t have to pretend or keep up a facade? Why was it different than other times?",
             "What would a perfect day look like for you?",
             "What is your favorite part of everyday life?",
             "What is one of the qualities in your personality that you appreciate?",
@@ -445,13 +468,13 @@
         ];
 
         const galleryEntries = [
-            { prompt: "What is a lesson you are thankful you learned?", answer: "That 'no' is a complete sentence. Protecting my own space, energy, and peace isn't selfish; it's how I can keep helping others, and myself too." },
+            { prompt: "What is a lesson you are thankful you learned?", answer: "That 'no' is a complete sentence. Protecting my own space, energy and peace isn't selfish; it's how I can keep helping others, and myself too." },
             { prompt: "What would you tell your 15-year-old self today?", answer: "It will get so much better. You will find a group of people who love you for the very things that some people say are strange and different." },
             { prompt: "Who is someone that makes your life better?", answer: "The person that checks in on me regularly with a phone call where we just talk about anything and everything. The person that I still have a deep connection with even without meeting for years now. Neither of them will probably ever understand it fully, but they make ... such a .. huge difference." },
             { prompt: "What is something beautiful you saw today?", answer: "The rain. The sound of it, the smell of it, the way it makes everything look and feel. It makes me feel calm and connected to the world around me." },
             { prompt: "What is a lesson you are thankful you learned?", answer: "..all the hard ones. [sigh] ... because they are, in the end ..important. Impactful. Even if they were hard to learn." },
             { prompt: "Who is someone that makes your life better?", answer: "My neighbor. She always waves and checks in on my cat when I'm away. Her open kindness makes me feel less alone in the world." },
-            { prompt: "What would you tell your 15-year-old self today?", answer: "Things will change. Things .. get better. It's going to take some time, but that time and all that you experience is how you become who you need to be, and ultimately, who you want to be. Trust in yourself and the process, even when it feels like nothing is changing. You are growing in ways you can't see yet." },
+            { prompt: "What would you tell your 15-year-old self today?", answer: "Things will change. Things ... get better. It's going to take some time, but that time and all that you experience in-between is how you become who you need to be, and ultimately, who you want to be. Trust in yourself and the process, even when it feels like nothing is changing. You are growing in ways you can't see yet." },
         ];
 
         let currentPromptText = "";
