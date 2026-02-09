@@ -33,7 +33,6 @@
             text-align: center;
             padding: 0;
             overflow: hidden; /* Prevents landing page scroll */
-            overflow-y: auto; /* Allow scrolling if the phone is very small */
         }
 
         /* Top Navigation */
@@ -248,7 +247,43 @@
             gap: 12px; /* Tighter gap between buttons */
         }
     }
+        /* Feedback Form Specific Styling */
+        #feedbackOverlay label {
+            display: block;                  /* Forces label to its own line */
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            margin-top: 30px;                /* Creates space between questions */
+            text-align: left;
+        }
 
+        #feedbackOverlay select {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            border: 1px solid #e0ddd5;
+            background: transparent;
+            color: var(--accent-color);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Overriding the global textarea style for the feedback form only */
+        #feedbackOverlay textarea {
+            height: 120px;                   /* Smaller height for feedback */
+            margin-top: 10px;
+            border: 1px solid #e0ddd5;       /* Full border instead of just bottom */
+            padding: 10px;
+        }
+
+        #feedbackOverlay .btn {
+            margin-top: 20px;
+            width: 100%;                     /* Makes the submit button easier to click on mobile */
+        }
     </style>
 </head>
 <body>
@@ -370,7 +405,7 @@
             </div>
         </div>
 
-        <a href="https://buymeacoffee.com/ruishinor" target="_blank" class="support-link">Want to support this work? Buy me a coffee</a>
+        <a href="https://buymeacoffee.com/ruishinor" target="_blank" class="support-link">Want to support this work?</a>
     </footer>
 
     <script>
