@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Gratitude Journal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script data-goatcounter="https://gratitudejournal.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <style>
         /* Typography */
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400&display=swap');
@@ -14,8 +15,20 @@
             --text-color: #1a1a1a;
             --accent-color: #8e9794;
             --overlay-bg: rgba(253, 252, 248, 0.99);
-            --show-visitors: none; 
+            --border-color: #e0ddd5;
+            --gallery-border: #eee;
+            --show-visitors: none;
             --show-notes: flex;
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f5f5f0;
+            --accent-color: #a8b0ac;
+            --overlay-bg: rgba(26, 26, 26, 0.99);
+            --border-color: #3a3a3a;
+            --gallery-border: #3a3a3a;
         }
 
         /* 1. Previous Fix for Scrolling: Set height to 100vh and hide overflow. Replaced with 100svh */
@@ -39,6 +52,35 @@
             top: 30px;
             right: 30px;
             z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-color);
+        }
+
+        .theme-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover i {
+            transform: rotate(15deg);
         }
 
         .container {
@@ -94,7 +136,7 @@
             max-width: 100%;
         }
 
-        .btn:hover { background-color: var(--text-color); color: white; border-color: var(--text-color); }
+        .btn:hover { background-color: var(--text-color); color: var(--bg-color); border-color: var(--text-color); }
 
         .btn-subtle {
             background: none; border: none; font-family: 'Lora', serif;
@@ -107,7 +149,7 @@
             justify-content: center;
             gap: 40px;
             margin-top: 20px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--gallery-border);
             padding-top: 30px;
             font-family: 'Inter', sans-serif;
         }
@@ -133,6 +175,10 @@
             opacity: 0.6;
         }
         .overlay-content { max-width: 600px; margin: 0 auto; }
+        .overlay-close-btn { margin-bottom: 40px; padding: 0; }
+        .overlay-label { font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent-color); }
+        .locked-prompt { font-size: 1.5rem; margin: 15px 0 30px 0; font-style: italic; }
+        .gallery-title { font-weight: 400; margin-bottom: 50px; font-size: 1.8rem; }
 
         .about-section { margin-bottom: 40px; }
         .about-section h2 { 
@@ -147,21 +193,21 @@
         .about-section p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 40px; font-weight: 400; }
         .about-section a { color: var(--text-color); text-decoration: underline; }
 
-        textarea { 
-        width: 100%; 
-        height: 300px; 
+        textarea {
+        width: 100%;
+        height: 300px;
         background: transparent; /* Removes the white box */
-        border: none; 
-        border-bottom: 1px solid #e0ddd5; /* A single, soft horizontal line */
-        padding: 10px 0; 
-        font-family: 'Lora', serif; 
+        border: none;
+        border-bottom: 1px solid var(--border-color); /* A single, soft horizontal line */
+        padding: 10px 0;
+        font-family: 'Lora', serif;
         font-size: 1.3rem; /* Slightly larger for a more personal feel */
         line-height: 1.7; /* More space between lines of text */
         color: var(--text-color);
-        margin-bottom: 30px; 
-        box-sizing: border-box; 
-        resize: none; 
-        outline: none; 
+        margin-bottom: 30px;
+        box-sizing: border-box;
+        resize: none;
+        outline: none;
         transition: border-color 0.4s ease;
         }
 
@@ -193,7 +239,7 @@
         }
 
         .footer-links { display: flex; justify-content: center; gap: 20px; }
-        footer a { color: var(--accent-color); text-decoration: none; transition: opacity 0.2s; }
+        footer a { color: var(--accent-color); text-decoration: none; transition: opacity 0.4s; }
         footer a:hover { opacity: 0.7; }
 
         .share-section {
@@ -208,15 +254,32 @@
         .share-icons { display: flex; gap: 18px; font-size: 1.1rem; }
         .share-icons a { color: var(--accent-color); }
 
-        .support-link { opacity: 0.7; font-style: italic; font-size: 0.65rem; margin-top: 5px; }
+        .support-link { opacity: 0.9; font-style: italic; font-size: 0.65rem; margin-top: 5px; }
         .support-link:hover { opacity: 1; text-decoration: underline; }
 
-        .blur { filter: blur(10px); opacity: 0.2; pointer-events: none; }
+        .stats-counter {
+            font-size: 0.6rem;
+            letter-spacing: 0.5px;
+            opacity: 0.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        .stats-divider { margin: 0 2px; }
+        .stats-note { 
+            font-size: 0.55rem; 
+            opacity: 0.7; 
+            margin-left: 4px;
+        }
+
+        .blur { filter: blur(10px); opacity: 0.4; pointer-events: none; }
 
         /* Gallery Styling Hierarchy */
         .gallery-entry {
             margin-bottom: 60px;
-            border-left: 2px solid #eee;
+            border-left: 2px solid var(--gallery-border);
             padding-left: 25px;
         }
 
@@ -270,9 +333,9 @@
             padding: 12px;
             font-family: 'Lora', serif;
             font-size: 1rem;
-            border: 1px solid #e0ddd5;
+            border: 1px solid var(--border-color);
             background: transparent;
-            color: var(--accent-color);
+            color: var(--text-color);
             outline: none;
             cursor: pointer;
         }
@@ -281,7 +344,7 @@
         #feedbackOverlay textarea {
             height: 120px;                   /* Smaller height for feedback */
             margin-top: 10px;
-            border: 1px solid #e0ddd5;       /* Full border instead of just bottom */
+            border: 1px solid var(--border-color);       /* Full border instead of just bottom */
             padding: 10px;
         }
 
@@ -294,26 +357,29 @@
 <body>
 
     <nav class="top-nav">
-        <button class="btn-subtle" onclick="openAbout()">About</button>
+        <button type="button" class="btn-subtle" onclick="openAbout()">About</button>
+        <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode">
+            <i class="fas fa-moon" id="theme-icon" aria-hidden="true"></i>
+        </button>
     </nav>
 
     <div class="container" id="main-container">
         <h1>The Gratitude Journal</h1>
         <div id="prompt-display">...</div>
-        
+
         <div class="button-group">
-            <button class="btn" onclick="openReflect()">Reflect on this</button>
-            <button class="btn" onclick="getRandomPrompt()">Get Another Prompt</button>
+            <button type="button" class="btn" onclick="openReflect()">Reflect on this</button>
+            <button type="button" class="btn" onclick="getRandomPrompt()">Get Another Prompt</button>
         </div>
     </div>
 
     <div id="aboutOverlay" class="overlay">
         <div class="overlay-content">
-            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-            
+            <button type="button" class="btn-subtle overlay-close-btn" onclick="closeAllOverlays()">← Close</button>
+
             <div class="about-section">
             <h2>About</h2>
-            <p><italic>The Gratitude Journal</italic> is an easy-to-reach space to reduce stress, break a spiral of negative thoughts if one has started, and create a moment for positive reflection. By taking the time to answer just one of these questions, you can shift your mindset from what you don't have to what you do have. This site exists as a reminder that even in difficult times, there are small things worth noticing.</p>
+            <p><em>The Gratitude Journal</em> is an easy-to-reach space to reduce stress, break a spiral of negative thoughts if one has started, and create a moment for positive reflection. By taking the time to answer just one of these questions, you can shift your mindset from what you don't have to what you do have. This site exists as a reminder that even in difficult times, there are small things worth noticing.</p>
             <p>Every prompt you see on this site was chosen to help shift your focus away from what might be lacking and toward the good things you already have. There are 90 different prompts in this collection, all pulled directly from <a href="https://ruishinor.gumroad.com/" target="_blank"><em>The Complete Gratitude Workbook</em></a>, where you can find even more information about the impact of gratitude journaling.</p>
         </div>
 
@@ -324,24 +390,24 @@
 
         <div class="about-section">
             <h2>Help others</h2>
-            <p>You are not required to write and submit your personal reflections on this website. But if you do choose to submit a reflection, it might be shared with the community. 
+            <p>You are not required to write and submit your personal reflections on this website. But if you do choose to submit a reflection, it might be shared with the community.</p>
             <p>Your reflections on life could be exactly what someone else needs to read to get inspired or to get through a difficult time.</p>
-            <p>All submissions are reviewed and may be lightly edited to make sure they're ready to be published. So hey, don't overthink your entries. They don't have to be perfect. They just have to be real.</b></p>
+            <p>All submissions are reviewed and may be lightly edited to make sure they're ready to be published. So hey, don't overthink your entries. They don't have to be perfect. They just have to be real.</p>
         </div>
 
         <div class="about-section">
             <h2>Support</h2>
-            <p>If you are struggling right now, please know that you are not alone.<br>Get some air. Go for a walk. Call someone and talk about anything at all.</br>That connection with another person? That can change <italic>everything</italic>, and shifting your physical environment can too.</p>
-            <p>This website was created by <a href="https://www.instagram.com/bastard_bearded/" target="_blank"><em>Holf Services.</em></a> and published under the RuishiNOR name. </p>
+            <p>If you are struggling right now, please know that you are not alone. Get some air. Go for a walk. Call someone and talk about anything at all. That connection with another person? That can change <em>everything</em>, and shifting your physical environment can too.</p>
+            <p>This website was created by Holf Services, and published under the <a href="https://ruishinor.gumroad.com/" target="_blank"><em>RuishiNOR</em></a> name.</p>
             </div>
         </div>
     </div>
 
     <div id="reflectOverlay" class="overlay">
         <div class="overlay-content">
-            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-            <span style="font-family: 'Inter', sans-serif; font-size: 0.7rem; text-transform: uppercase; color: var(--accent-color);">reflection</span>
-            <div id="locked-prompt" style="font-size: 1.5rem; margin: 15px 0 30px 0; font-style: italic;"></div>
+            <button type="button" class="btn-subtle overlay-close-btn" onclick="closeAllOverlays()">← Close</button>
+            <span class="overlay-label">reflection</span>
+            <div id="locked-prompt" class="locked-prompt"></div>
             <form action="https://formspree.io/f/xdaloqzj" method="POST">
                 <input type="hidden" name="prompt" id="hidden-prompt-input">
                 <textarea name="reflection" placeholder="Write your reflection here..." required></textarea>
@@ -352,15 +418,15 @@
 
     <div id="feedbackOverlay" class="overlay">
     <div class="overlay-content">
-        <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
-        
+        <button type="button" class="btn-subtle overlay-close-btn" onclick="closeAllOverlays()">← Close</button>
+
         <div class="section">
             <h2>Feedback</h2>
             <p>Thanks for sharing your thoughts with us and helping us improve the site. This is anonymous.</p>
         </div>
 
         <form action="https://formspree.io/f/mqedazqy" method="POST">
-            
+
             <label>How was your experience using the site today?</label>
             <select name="user_experience">
                 <option value="" selected>Choose an option...</option>
@@ -377,9 +443,9 @@
                 <option value="Maybe: If needed">Maybe when I'm feeling stressed</option>
                 <option value="No: Unlikely">Probably not</option>
             </select>
-        
+
             <label>Is there anything else you'd like to share?</label>
-            <textarea name="additional_feedback" placeholder="Your thoughts..."></textarea>            
+            <textarea name="additional_feedback" placeholder="Your thoughts..."></textarea>
             <button type="submit" class="btn">Send Feedback</button>
         </form>
         </div>
@@ -387,8 +453,8 @@
 
     <div id="galleryOverlay" class="overlay">
         <div class="overlay-content">
-            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Back</button>
-            <h2 style="font-weight: 400; margin-bottom: 50px; font-size: 1.8rem;">Community Notes</h2>
+            <button type="button" class="btn-subtle overlay-close-btn" onclick="closeAllOverlays()">← Back</button>
+            <h2 class="gallery-title">Community Notes</h2>
             <div id="gallery-list"></div>
         </div>
     </div>
@@ -402,16 +468,25 @@
         <div class="share-section">
             <span class="share-text">Help us reach more people by sharing this site</span>
             <div class="share-icons">
-                <a href="javascript:void(0)" onclick="socialShare('facebook')" title="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="javascript:void(0)" onclick="socialShare('x')" title="Share on X"><i class="fab fa-x-twitter"></i></a>
-                <a href="javascript:void(0)" onclick="socialShare('whatsapp')" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="javascript:void(0)" onclick="socialShare('linkedin')" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="javascript:void(0)" onclick="socialShare('copy')" title="Copy Link"><i class="fa fa-link"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('threads')" title="Share on Threads" aria-label="Share on Threads"><i class="fab fa-threads" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('reddit')" title="Share on Reddit" aria-label="Share on Reddit"><i class="fab fa-reddit-alien" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('facebook')" title="Share on Facebook" aria-label="Share on Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('x')" title="Share on X" aria-label="Share on X"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('whatsapp')" title="Share on WhatsApp" aria-label="Share on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('linkedin')" title="Share on LinkedIn" aria-label="Share on LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                <a href="javascript:void(0)" onclick="socialShare('copy')" title="Copy Link" aria-label="Copy link to clipboard"><i class="fa fa-link" aria-hidden="true"></i></a>
             </div>
         </div>
 
+        <div class="stats-counter">
+            <span><span id="visitor-count">--</span> visits</span>
+            <span class="stats-divider">·</span>
+            <span><span id="prompt-count">--</span> prompts</span>
+            <span class="stats-note">(since Feb 16, 2026)</span>
+        </div>
+
         <a href="https://buymeacoffee.com/ruishinor" target="_blank" class="support-link">If you want to support this work, you can do that [here].</a>
-        
+
         <div class="copyright">
             © <span id="year"></span> Holf Services. All rights reserved..
         </div>
@@ -532,6 +607,7 @@
                 currentPromptText = prompts[randomIndex];
                 display.innerText = currentPromptText;
                 display.style.opacity = 1;
+                incrementPromptCount();
             }, 600);
         }
 
@@ -545,6 +621,8 @@
                 case 'x': shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`; break;
                 case 'whatsapp': shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`; break;
                 case 'linkedin': shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${url}`; break;
+                case 'threads': shareUrl = `https://www.threads.net/intent/post?text=${text}%20${url}`; break;
+                case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${text}`; break;
                 case 'copy':
                     navigator.clipboard.writeText(window.location.href);
                     alert("Link copied to clipboard!");
@@ -603,10 +681,101 @@
             document.getElementById('year').textContent = new Date().getFullYear();
         }
 
-        window.onload = getRandomPrompt;
+        // Theme Toggle Functions
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                updateThemeIcon('dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                updateThemeIcon('light');
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            if (newTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        window.onload = function() {
+             getRandomPrompt();
+             updateStats();
+             initTheme();
+         };
         window.onpopstate = function() {
         closeAllOverlays(false); // Close without adding another history state
     };
+
+        // Stats tracking with GoatCounter
+        let promptsDelivered = parseInt(localStorage.getItem('promptsDelivered') || '0');
+        
+        function incrementPromptCount() {
+            promptsDelivered++;
+            localStorage.setItem('promptsDelivered', promptsDelivered.toString());
+            // Track as GoatCounter event
+            if (window.goatcounter) {
+                window.goatcounter.count({
+                    path: '/event/prompt-delivered',
+                    title: 'Prompt Delivered',
+                    event: true
+                });
+            }
+            updateStatsDisplay();
+        }
+
+        function updateStats() {
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            const visitorDisplay = document.getElementById('visitor-count');
+            const promptDisplay = document.getElementById('prompt-count');
+            
+            // Fetch total pageviews from GoatCounter API
+            fetch('https://gratitudejournal.goatcounter.com/api/v0/stats', {
+                headers: {
+                    'Authorization': 'Bearer ralgjnosnk8523u2xvqvq0yboqkt9j0ela6bd6k0lq6uy41qw'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // GoatCounter returns total pageviews/visits
+                    if (visitorDisplay && data.total) {
+                        visitorDisplay.textContent = data.total.toLocaleString();
+                    } else if (visitorDisplay && data.stats) {
+                        // Alternative response structure
+                        const total = data.stats.reduce((sum, s) => sum + (s.count || 0), 0);
+                        visitorDisplay.textContent = total.toLocaleString();
+                    }
+                })
+                .catch(() => {
+                    if (visitorDisplay) visitorDisplay.textContent = '—';
+                });
+
+            // For prompts delivered, show local count (also tracked in GoatCounter)
+            if (promptDisplay) {
+                promptDisplay.textContent = promptsDelivered.toLocaleString();
+            }
+        }
     </script>
 </body>
 </html>
