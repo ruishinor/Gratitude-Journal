@@ -452,11 +452,11 @@ function toggleTheme() {
 function applyTheme(theme) {
     if (theme === "dark") {
         document.documentElement.setAttribute("data-theme", "dark");
-        dom.themeIcon.textContent = "Sun";
+        dom.themeIcon.textContent = "Light";
         dom.themeToggle.setAttribute("aria-label", "Switch to light theme");
     } else {
         document.documentElement.removeAttribute("data-theme");
-        dom.themeIcon.textContent = "Moon";
+        dom.themeIcon.textContent = "Dark";
         dom.themeToggle.setAttribute("aria-label", "Switch to dark theme");
     }
 }
