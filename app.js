@@ -308,7 +308,7 @@ function openOverlay(id) {
     }
 
     if (activeOverlay && activeOverlay !== overlay) {
-        closeAllOverlays({ restoreFocus: false });
+        closeAllOverlays({ restoreFocus: false, pushState: false });
     }
 
     if (id === "reflectOverlay") {
@@ -321,6 +321,8 @@ function openOverlay(id) {
     document.body.classList.add("overlay-open");
     dom.siteShell.classList.add("blurred");
 
+    history.pushState({ overlay: id }, "");
+
     const focusable = getFocusableElements(overlay);
     if (focusable.length > 0) {
         focusable[0].focus();
@@ -328,7 +330,7 @@ function openOverlay(id) {
 }
 
 function closeAllOverlays(options = {}) {
-    const { restoreFocus = true } = options;
+    const { restoreFocus = true, pushState = true } = options;
 
     document.querySelectorAll(".overlay").forEach((overlay) => {
         overlay.hidden = true;
@@ -338,10 +340,20 @@ function closeAllOverlays(options = {}) {
     document.body.classList.remove("overlay-open");
     dom.siteShell.classList.remove("blurred");
 
+    if (pushState && history.state?.overlay) {
+        history.back();
+    }
+
     if (restoreFocus && previousFocus) {
         previousFocus.focus();
     }
 }
+
+window.addEventListener("popstate", (event) => {
+    if (activeOverlay) {
+        closeAllOverlays({ restoreFocus: true, pushState: false });
+    }
+});
 
 function renderGallery() {
     dom.galleryList.textContent = "";
