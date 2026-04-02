@@ -169,6 +169,7 @@ function init() {
     dom.themeIcon = document.getElementById("theme-icon");
 
     bindEvents();
+    restoreOverlayState();
     renderGallery();
     initTheme();
     updatePromptCount();
@@ -299,7 +300,8 @@ function syncPromptState() {
     dom.hiddenPromptInput.value = currentPromptText;
 }
 
-function openOverlay(id) {
+function openOverlay(id, options = {}) {
+    const { pushState = true } = options;
     const overlay = document.getElementById(id);
     if (!overlay) {
         return;
@@ -323,7 +325,9 @@ function openOverlay(id) {
     document.body.classList.add("overlay-open");
     dom.siteShell.classList.add("blurred");
 
-    history.pushState({ overlay: id }, "");
+    if (pushState) {
+        history.pushState({ overlay: id }, "");
+    }
 
     const focusable = getFocusableElements(overlay);
     if (focusable.length > 0) {
@@ -332,7 +336,7 @@ function openOverlay(id) {
 }
 
 function closeAllOverlays(options = {}) {
-    const { restoreFocus = true, pushState = true } = options;
+    const { restoreFocus = true } = options;
 
     document.querySelectorAll(".overlay").forEach((overlay) => {
         overlay.hidden = true;
@@ -342,20 +346,24 @@ function closeAllOverlays(options = {}) {
     document.body.classList.remove("overlay-open");
     dom.siteShell.classList.remove("blurred");
 
-    if (pushState && history.state?.overlay) {
-        history.back();
-    }
-
     if (restoreFocus && previousFocus) {
         previousFocus.focus();
     }
 }
 
 window.addEventListener("popstate", (event) => {
-    if (activeOverlay) {
-        closeAllOverlays({ restoreFocus: true, pushState: false });
+    if (event.state?.overlay) {
+        openOverlay(event.state.overlay, { pushState: false });
+    } else if (activeOverlay) {
+        closeAllOverlays({ restoreFocus: false, pushState: false });
     }
 });
+
+function restoreOverlayState() {
+    if (history.state?.overlay) {
+        openOverlay(history.state.overlay, { pushState: false });
+    }
+}
 
 function renderGallery() {
     dom.galleryList.textContent = "";
