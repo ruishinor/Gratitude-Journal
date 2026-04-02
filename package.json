@@ -1,0 +1,20 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "Production-hardened static site for The Gratitude Journal",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm run verify",
+    "verify": "node verify-site.mjs http://127.0.0.1:4173/",
+    "audit": "npm audit --omit=dev",
+    "preview": "node preview-server.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  },
+  "private": "true"
+}

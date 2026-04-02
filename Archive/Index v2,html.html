@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reasons to be Grateful</title>
+    <style>
+        :root {
+            --bg-color: #fdfcf8;
+            --text-color: #2c3e50;
+            --accent-color: #7f8c8d;
+        }
+        body {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 1.1rem;
+            font-weight: normal;
+            letter-spacing: 3px;
+            color: var(--accent-color);
+            margin-bottom: 60px;
+            text-transform: uppercase;
+        }
+        #prompt-display {
+            font-size: 2.2rem;
+            line-height: 1.5;
+            margin-bottom: 50px;
+            min-height: 180px;
+            transition: opacity 0.8s ease;
+            opacity: 1;
+        }
+        .btn {
+            background: none;
+            border: 1px solid var(--accent-color);
+            padding: 12px 30px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            letter-spacing: 1px;
+        }
+        .btn:hover {
+            background-color: var(--text-color);
+            color: white;
+            border-color: var(--text-color);
+        }
+        footer {
+            position: fixed;
+            bottom: 30px;
+            font-size: 0.85rem;
+            color: var(--accent-color);
+        }
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin: 0 15px;
+            border-bottom: 1px solid transparent;
+        }
+        footer a:hover {
+            border-bottom: 1px solid var(--accent-color);
+        }
+        /* About Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255,255,255,0.98);
+            padding: 50px 20px;
+            overflow-y: auto;
+            text-align: left;
+            z-index: 100;
+        }
+        .modal-content {
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        .modal h2 { font-weight: normal; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Reasons to be Grateful</h1>
+        <div id="prompt-display">
+            </div>
+        <button class="btn" onclick="getRandomPrompt()">GET ANOTHER PROMPT</button>
+    </div>
+
+    <footer>
+        <a href="#" onclick="toggleModal()">About this site</a>
+        <a href="https://ruishinor.gumroad.com/" target="_blank">The Full 90-Day Journal</a>
+    </footer>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <h2>About this Practice</h2>
+            <p><strong>Gratitude turns what we have into enough.</strong></p>
+            <p>This site is a digital refuge designed to disrupt stress and provide a moment of positive reflection. Taking a moment to answer just one of these questions can shift your mindset from what is lacking to what is present.</p>
+            
+            <h3>The Science</h3>
+            <p>Research shows that focusing on positive elements of your life significantly enhances happiness and health by shifting attention away from negative bias. This collection of 90 prompts is pulled directly from <em>The Complete Gratitude Workbook</em>.</p>
+            
+            <br>
+            <button class="btn" onclick="toggleModal()">Back to Prompts</button>
+        </div>
+    </div>
+
+    <script>
+        const prompts = [
+            "What is a lesson you are thankful you learned?",
+            "What is one event in the future you are looking forward to, and why?",
+            "Write a short letter to your future self. What would you want that person to remember?",
+            "What are three things at home that help you take care of yourself?",
+            "What helps you feel healthy and well?",
+            "What is something that you feel grateful to have experienced?",
+            "What is one habit specific that improves your physical health?",
+            "Name five things your past self would be proud of in your life today.",
+            "Describe a recent moment when your natural strengths showed clearly.",
+            "What is a meaningful gift you received recently?",
+            "Recall a specific moment you felt perfectly understood by someone.",
+            "Write down three of the happiest moments you can think of.",
+            "Who is someone who makes your life better?",
+            "What is one thing someone does for you that you feel grateful for?",
+            "Think of someone you love. What do you appreciate most about them today?",
+            "How do you usually show appreciation to others?",
+            "What is a small way you and a friend show you care about each other?",
+            "Name three people that always can put a smile on your face.",
+            "Describe a favorite memory with someone important to you.",
+            "Recall a recent gesture that made you feel loved.",
+            "How has a friend supported or inspired you lately?",
+            "What is a recent compliment you received that made you feel good?",
+            "Choose a recent photo that makes you smile. What is happening in it?",
+            "Right now, what does feeling “well” or “secure” feel like in your body?",
+            "How has a family member or close friend supported you in an important way?",
+            "What is one positive experience that changed your life in a meaningful way?",
+            "Describe a recent conversation that left you feeling good.",
+            "How does movement or exercise affect your mood?",
+            "What are you learning about yourself right now?",
+            "Who is someone you cannot imagine life without?",
+            "If you could send one sentence into the future, what would it say?",
+            "What is something you tried for the first time recently?",
+            "What positive feelings did you notice today?",
+            "Name someone you have never met who still helped you in some way.",
+            "What is something beautiful you saw today?",
+            "When did you last feel awe or wonder?",
+            "What is something valuable you learned today?",
+            "Describe your perfect rainy day using your senses.",
+            "How has practicing gratitude been changing your thoughts lately?",
+            "Write a short thank-you note to someone you're thinking of.",
+            "What is something you recently finished that you feel proud of?",
+            "What is something that always can make you happy, even on hard days?",
+            "When was the last time someone thanked you?",
+            "Write yourself one encouraging, kind sentence as if to a friend.",
+            "What is something you appreciate about the time you live in now?",
+            "Acknowledge your inner strength from a hard time.",
+            "Recall a recent moment when someone was kind to you.",
+            "What is one small object you are grateful for?",
+            "Describe a recent moment when you felt completely at peace.",
+            "Recall a time you felt grateful for something a loved one did.",
+            "Name one positive thing from today, even if it was small.",
+            "Write a short thank-you note to yourself for something you handled well.",
+            "What is one small thing you look forward to this week?",
+            "Imagine your life one year from now. What is the most important change?",
+            "List five tools or items that make daily life easier.",
+            "What are three good things you have today that you didn’t have five years ago?",
+            "Describe a recent time where you made use of your natural strengths.",
+            "What is an achievement you are truly proud of?",
+            "What do you need more of right now? What is one small step toward it?",
+            "What would you hope your future self understands about this period?",
+            "What is a skill you have that might surprise people?",
+            "What is one way you have grown recently?",
+            "Describe yourself using five positive words.",
+            "When did you last feel you didn’t have to pretend?",
+            "What would a perfect day look like for you?",
+            "What is your favorite part of everyday life?",
+            "What is one of the qualities in your personality that you appreciate?",
+            "How do you hope people close to you experience you?",
+            "What activity brings you the most joy?",
+            "What is one thing you appreciate about your body?",
+            "Recall a time you took a stand for something that mattered.",
+            "What does true happiness mean to you?",
+            "Describe to a stranger who you are in exactly 20 words.",
+            "Which part of your day do you look forward to the most?",
+            "List three small things that help you relax or breathe easier.",
+            "What place would you love to visit again?",
+            "Forgive yourself for one thing. What changes when you do?",
+            "Describe a favorite childhood memory.",
+            "What life lesson shaped who you are today?",
+            "What song always lifts your mood?",
+            "What part of your health are you grateful for today?",
+            "What is one important thing you learned about yourself this year?",
+            "What would be one intention you would set for the coming week?",
+            "Remember a time you did better than you expected.",
+            "Who would you call in an emergency?",
+            "Describe a small act of kindness you did recently.",
+            "What is a boundary you recently set to protect your peace?",
+            "What is one of the most important pieces of advice you have received?",
+            "What would you tell your 12-year-old self today?"
+        ];
+
+        function getRandomPrompt() {
+            const display = document.getElementById('prompt-display');
+            
+            // Start fade out
+            display.style.opacity = 0;
+            
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                display.innerText = prompts[randomIndex];
+                // Start fade in
+                display.style.opacity = 1;
+            }, 800); // Matches the CSS transition time
+        }
+
+        function toggleModal() {
+            const modal = document.getElementById('aboutModal');
+            modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Load first prompt on page load
+        window.onload = getRandomPrompt;
+    </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reasons for Gratitude</title>
+    <style>
+        /* Typography: Lora is warmer and more 'comfortable' than Baskerville */
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400&display=swap');
+
+        :root {
+            --bg-color: #fdfcf8;
+            --text-color: #1a1a1a; /* Deeper black for readability */
+            --accent-color: #8e9794;
+            --overlay-bg: rgba(253, 252, 248, 0.99);
+            
+            /* --- STATISTICS TOGGLE --- */
+            /* Change 'flex' to 'none' to hide specific stats, none to flex to show them */
+            --show-visitors: none; 
+            --show-notes: none;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Lora', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 750px;
+            width: 100%;
+            transition: filter 0.5s ease;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            color: var(--accent-color);
+            margin-bottom: 70px;
+            text-transform: uppercase;
+        }
+
+        #prompt-display {
+            font-size: 2.1rem;
+            line-height: 1.5;
+            margin-bottom: 50px;
+            min-height: 160px;
+            font-weight: 400;
+            transition: opacity 0.8s ease;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 60px;
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--accent-color);
+            padding: 14px 34px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover { background-color: var(--text-color); color: white; border-color: var(--text-color); }
+
+        .btn-subtle {
+            background: none; border: none; font-family: 'Lora', serif;
+            font-style: italic; color: var(--accent-color);
+            text-decoration: underline; cursor: pointer; font-size: 0.95rem;
+        }
+
+        /* Statistics Section */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-item { flex-direction: column; align-items: center; }
+        .stat-val { font-size: 1.2rem; font-weight: 400; color: var(--text-color); }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-color); margin-top: 5px; }
+
+        /* Toggles based on CSS variables at top */
+        .stat-visitors { display: var(--show-visitors); }
+        .stat-notes { display: var(--show-notes); }
+
+        /* Overlays */
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--overlay-bg); z-index: 1000;
+            padding: 60px 20px; box-sizing: border-box; text-align: left; overflow-y: auto;
+        }
+
+        .overlay-content { max-width: 600px; margin: 0 auto; }
+
+        /* Gallery Card Styling */
+        .reflection-card {
+            margin-bottom: 45px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-prompt {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .card-answer {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        textarea {
+            width: 100%; height: 250px; background: #fff; border: 1px solid #eee;
+            padding: 20px; font-family: 'Lora', serif; font-size: 1.1rem;
+            margin-bottom: 20px; box-sizing: border-box; resize: none; outline: none;
+        }
+
+        footer { position: fixed; bottom: 30px; font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--accent-color); }
+        footer a { color: var(--accent-color); text-decoration: none; margin: 0 15px; }
+        .blur { filter: blur(10px); opacity: 0.2; pointer-events: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <h1>Reasons for Gratitude</h1>
+        <div id="prompt-display">...</div>
+        
+        <div class="button-group">
+            <button class="btn" onclick="getRandomPrompt()">Get Another Prompt</button>
+            <button class="btn-subtle" onclick="openReflect()">Reflect on this</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item stat-visitors">
+                <span class="stat-val">1,204</span>
+                <span class="stat-label">Visitors</span>
+            </div>
+            <div class="stat-item stat-notes">
+                <span class="stat-val">84</span>
+                <span class="stat-label">Notes of Gratitude</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="reflectOverlay" class="overlay">
+        <div class="overlay-content">
+            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Close</button>
+            <span class="card-prompt">Reflecting on:</span>
+            <div id="locked-prompt" style="font-size: 1.5rem; margin-bottom: 30px; font-style: italic;"></div>
+            
+            <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
+                <input type="hidden" name="prompt" id="hidden-prompt-input">
+                <textarea name="reflection" placeholder="Write your reflection here..." required></textarea>
+                <button type="submit" class="btn">Submit for Review</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="galleryOverlay" class="overlay">
+        <div class="overlay-content">
+            <button class="btn-subtle" onclick="closeAllOverlays()" style="margin-bottom: 40px; padding: 0;">← Back</button>
+            <h2 style="font-weight: 400; margin-bottom: 50px; font-size: 1.8rem;">Community Reflections</h2>
+            
+            <div id="gallery-list"></div>
+
+            <p style="text-align: center; color: var(--accent-color); font-size: 0.75rem; margin-top: 60px; letter-spacing: 1px;">
+                NEW REFLECTIONS ADDED WEEKLY.
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <a href="javascript:void(0)" onclick="openGallery()">Read Reflections</a>
+        <a href="https://ruishinor.gumroad.com/" target="_blank">The Full Journal</a>
+    </footer>
+
+    <script>
+        const prompts = [
+            "What is a lesson you are thankful you learned?",
+            "What is one event in the future you are looking forward to, and why?",
+            "Write a short letter to your future self. What would you want that person to remember?",
+            "What are three things at home that help you take care of yourself?",
+            "What helps you feel healthy and well?",
+            "What is something that you feel grateful to have experienced?",
+            "What is one habit specific that improves your physical health?",
+            "Name five things your past self would be proud of in your life today.",
+            "Describe a recent moment when your natural strengths showed clearly.",
+            "What is a meaningful gift you received recently?",
+            "Recall a specific moment you felt perfectly understood by someone.",
+            "Write down three of the happiest moments you can think of.",
+            "Who is someone that makes your life better?",
+            "What is one thing someone does for you that you feel grateful for?",
+            "Think of someone you love. What do you appreciate most about them today?",
+            "How do you usually show appreciation to others?",
+            "What is a small way you and a friend show you care about each other?",
+            "Name three people that always can put a smile on your face.",
+            "Describe a favorite memory with someone important to you.",
+            "Recall a recent gesture that made you feel loved.",
+            "How has a friend supported or inspired you lately?",
+            "What is a recent compliment you received that made you feel good?",
+            "Choose a recent photo that makes you smile. What is happening in it?",
+            "Right now, what does feeling “well” or “secure” feel like in your body?",
+            "How has a family member or close friend supported you in an important way?",
+            "What is one positive experience that changed your life in a meaningful way?",
+            "Describe a recent conversation that left you feeling good.",
+            "How does movement or exercise affect your mood?",
+            "What are you learning about yourself right now?",
+            "Who is someone you cannot imagine life without?",
+            "If you could send one sentence into the future, what would it say?",
+            "What is something you tried for the first time recently?",
+            "What positive feelings did you notice today?",
+            "Who is someone you have never met, but who has helped you in some way?",
+            "What is something beautiful you saw today?",
+            "When did you last feel awe or wonder?",
+            "What is something valuable you learned today?",
+            "Describe your perfect rainy day using your senses.",
+            "How has practicing gratitude been changing your thoughts lately?",
+            "Write a short thank-you note to someone you're thinking of.",
+            "What is something you recently finished that you feel proud of?",
+            "What is something that always can make you happy, even on hard days?",
+            "When was the last time someone thanked you?",
+            "Write yourself one encouraging, kind sentence as if to a friend.",
+            "What is something you appreciate about the time you live in now?",
+            "Acknowledge your inner strength from a hard time.",
+            "Recall a recent moment when someone was kind to you.",
+            "What is one small object you are grateful for?",
+            "Describe a recent moment when you felt completely at peace.",
+            "Recall a time you felt grateful for something a loved one did.",
+            "Name one positive thing from today, even if it was small.",
+            "Write a short thank-you note to yourself for something you handled well.",
+            "What is one small thing you look forward to this week?",
+            "Imagine your life one year from now. What is the most important change?",
+            "List five tools or items that make daily life easier.",
+            "What are three good things you have today that you didn’t have five years ago?",
+            "Describe a recent time where you made use of your natural strengths.",
+            "What is an achievement you are truly proud of?",
+            "What do you need more of right now? What is one small step toward it?",
+            "What would you hope your future self understands about this period?",
+            "What is a skill you have that might surprise people?",
+            "What is one way you have grown recently?",
+            "Describe yourself using five positive words.",
+            "When did you last feel you didn’t have to pretend?",
+            "What would a perfect day look like for you?",
+            "What is your favorite part of everyday life?",
+            "What is one of the qualities in your personality that you appreciate?",
+            "How do you hope people close to you experience you?",
+            "What activity brings you the most joy?",
+            "What is one thing you appreciate about your body?",
+            "Recall a time you took a stand for something that mattered.",
+            "What does true happiness mean to you?",
+            "Describe to a stranger who you are in exactly 20 words.",
+            "Which part of your day do you look forward to the most?",
+            "List three small things that help you relax or breathe easier.",
+            "What place would you love to visit again?",
+            "Forgive yourself for one thing. What changes when you do?",
+            "Describe a favorite childhood memory.",
+            "What life lesson shaped who you are today?",
+            "What song always lifts your mood?",
+            "What part of your health are you grateful for today?",
+            "What is one important thing you learned about yourself this year?",
+            "What would be one intention you would set for the coming week?",
+            "Remember a time you did better than you expected.",
+            "Who would you call in an emergency?",
+            "Describe a small act of kindness you did recently.",
+            "What is a boundary you recently set to protect your peace?",
+            "What is one of the most important pieces of advice you have received?",
+            "What would you tell your 15-year-old self today?"
+        ];
+
+        // --- MANUALLY ADD GALLERY ENTRIES HERE ---
+        const galleryEntries = [
+            {
+                prompt: "Who is someone that makes your life better?",
+                answer: "The person that checks in on me regularly with a phone call where we just talk about anything and everything. The person that I still have a deep connection with even without meeting for years now. Neither of them will probably ever understand it fully, but they make ... such a .. huge difference."
+            },
+            {
+                prompt: "What is something beautiful you saw today?",
+                answer: "The rain. The sound of it, the smell of it, the way it makes everything look and feel. It makes me feel calm and connected to the world around me."
+            },
+            {
+                prompt: "What is a lesson you are thankful you learned?",
+                answer: "That 'no' is a complete sentence. Protecting my own space, energy, and peace isn't selfish; it's how I can keep helping others, and myself too."
+            },
+            {
+                prompt: "What is a lesson you are thankful you learned?",
+                answer: "..all the hard ones. [sigh] ... because they are, in the end ..important. Impactful. Even if they were hard to learn."
+            },
+            {
+                prompt: "Who is someone that makes your life better?",
+                answer: "My neighbor. She always waves and checks in on my cat when I'm away. Her open kindness makes me feel less alone in the world."
+            },
+            {
+                prompt: "What would you tell your 15-year-old self today?",
+                answer: "It will get so much better. You will find a group of people who love you for the very things that some people say are strange and different."
+            },
+            {
+                prompt: "What would you tell your 15-year-old self today?",
+                answer: "Things will change. Things .. get better. It's going to take some time, but that time and all that you experience is how you become who you need to be, and ultimately, who you want to be. Trust in yourself and the process, even when it feels like nothing is changing. You are growing in ways you can't see yet."
+            },
+            {
+                prompt: "What would you tell your 15-year-old self today?",
+                answer: "I know you won't let the facade drop yet. I know you feel so much shame about your circumstances. I know it's heavy. All of it. I don't know if we will ever be able to say .. that it was worth it, but .. I'm still here. You're still here. --and you have actually had significant impact - positive impact - on some people's lives, and that must be important."
+            }
+        ];
+
+        let currentPromptText = "";
+
+        function getRandomPrompt() {
+            const display = document.getElementById('prompt-display');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                currentPromptText = prompts[randomIndex];
+                display.innerText = currentPromptText;
+                display.style.opacity = 1;
+            }, 600);
+        }
+
+        function openReflect() {
+            document.getElementById('locked-prompt').innerText = currentPromptText;
+            document.getElementById('hidden-prompt-input').value = currentPromptText;
+            document.getElementById('reflectOverlay').style.display = 'block';
+            document.getElementById('main-container').classList.add('blur');
+        }
+
+        function openGallery() {
+            const list = document.getElementById('gallery-list');
+            list.innerHTML = ''; // Clear existing
+            
+            galleryEntries.forEach(entry => {
+                const card = document.createElement('div');
+                card.className = 'reflection-card';
+                card.innerHTML = `
+                    <span class="card-prompt">Reflecting on: ${entry.prompt}</span>
+                    <p class="card-answer">"${entry.answer}"</p>
+                `;
+                list.appendChild(card);
+            });
+
+            document.getElementById('galleryOverlay').style.display = 'block';
+            document.getElementById('main-container').classList.add('blur');
+        }
+
+        function closeAllOverlays() {
+            document.getElementById('reflectOverlay').style.display = 'none';
+            document.getElementById('galleryOverlay').style.display = 'none';
+            document.getElementById('main-container').classList.remove('blur');
+        }
+
+        window.onload = getRandomPrompt;
+    </script>
+</body>
+</html>

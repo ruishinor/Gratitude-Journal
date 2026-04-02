@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reasons for Gratitude</title>
+    <style>
+        :root {
+            --bg-color: #fdfcf8;
+            --text-color: #2c3e50;
+            --accent-color: #7f8c8d;
+        }
+        body {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            animation: fadeIn 1.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 {
+            font-size: 1.2rem;
+            font-weight: normal;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            margin-bottom: 50px;
+        }
+        #prompt-display {
+            font-size: 2.5rem;
+            line-height: 1.4;
+            margin-bottom: 40px;
+            min-height: 200px;
+        }
+        .btn {
+            background: none;
+            border: 1px solid var(--accent-color);
+            padding: 12px 24px;
+            font-size: 1rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .btn:hover {
+            background-color: var(--text-color);
+            color: white;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+        footer a {
+            color: var(--accent-color);
+            text-decoration: underline;
+            margin: 0 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255,255,255,0.95);
+            padding: 50px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .modal-content {
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>REASONS FOR GRATITUDE</h1>
+        <div id="prompt-display">
+            </div>
+        <button class="btn" onclick="getRandomPrompt()">Another Prompt</button>
+    </div>
+
+    <footer>
+        <a href="#" onclick="toggleModal()">About</a>
+        <a href="https://ruishinor.gumroad.com/" target="_blank">Full 90-Day Journal</a>
+    </footer>
+
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <h2>About this Practice</h2>
+            <p><strong>Gratitude turns what we have into enough.</strong> This site is a digital refuge designed to disrupt stress and provide a moment of positive boost[cite: 549, 582].</p>
+            <h3>The Science</h3>
+            <p>Research by Emmons, McCullough, and Wood shows that focusing on good things significantly enhances happiness and health by shifting attention away from problems [cite: 567-578].</p>
+            <p>This randomized collection of 90 prompts is pulled from <em>The Complete Gratitude Workbook</em>[cite: 565].</p>
+            <button class="btn" onclick="toggleModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const prompts = [
+            "What is a lesson you are thankful you learned? [cite: 596]",
+            "What is one event in the future you are looking forward to, and why? [cite: 597]",
+            "Write a short letter to your future self. What would you want that person to remember? [cite: 598]",
+            "What are three things at home that help you take care of yourself? [cite: 600]",
+            "What helps you feel healthy and well? [cite: 601]",
+            "What is something that you feel grateful to have experienced? [cite: 602]",
+            "What is one habit specific that improves your physical health? [cite: 603]",
+            "Name five things your past self would be proud of in your life today. [cite: 604]",
+            "Describe a recent moment when your natural strengths showed clearly. [cite: 605]",
+            "What is a meaningful gift you received recently? [cite: 606]",
+            "Recall a specific moment you felt perfectly understood by someone. [cite: 607]",
+            "Write down three of the happiest moments you can think of. [cite: 608]",
+            "Who is someone who makes your life better? [cite: 609]",
+            "What is one thing someone does for you that you feel grateful for? [cite: 610]",
+            "Think of someone you love. What do you appreciate most about them today? [cite: 611-612]",
+            "How do you usually show appreciation to others? [cite: 612]",
+            "What is a small way you and a friend show you care about each other? [cite: 613]",
+            "Name three people that always can put a smile on your face. [cite: 614]",
+            "Describe a favorite memory with someone important to you. [cite: 615]",
+            "Recall a recent gesture that made you feel loved. [cite: 616]",
+            "How has a friend supported or inspired you lately? [cite: 617]",
+            "What is a recent compliment you received that made you feel good? [cite: 618]",
+            "Choose a recent photo that makes you smile. Describe it. [cite: 619-620]",
+            "Right now, what does feeling “well” or “secure” feel like in your body? [cite: 620]",
+            "How has a family member or close friend supported you in an important way? [cite: 621]",
+            "What is one positive experience that changed your life in a meaningful way? [cite: 622]",
+            "Describe a recent conversation that left you feeling good. [cite: 623]",
+            "How does movement or exercise affect your mood? [cite: 624]",
+            "What are you learning about yourself right now? [cite: 625]",
+            "Who is someone you cannot imagine life without? [cite: 626]",
+            "If you could send one sentence into the future, what would it say? [cite: 627]",
+            "What is something you tried for the first time recently? [cite: 628]",
+            "What positive feelings did you notice today? [cite: 629]",
+            "Name someone you have never met who still helped you in some way. [cite: 630]",
+            "What is something beautiful you saw today? [cite: 631]",
+            "When did you last feel awe or wonder? [cite: 632]",
+            "What is something valuable you learned today? [cite: 633]",
+            "Describe your perfect rainy day using your senses. [cite: 634-635]",
+            "How has practicing gratitude been changing your thoughts lately? [cite: 635]",
+            "Write a short thank-you note to someone you're thinking of. [cite: 636]",
+            "What is something you recently finished that you feel proud of? [cite: 637]",
+            "What is something that always can make you happy, even on hard days? [cite: 638]",
+            "When was the last time someone thanked you? [cite: 639]",
+            "Write yourself one encouraging, kind sentence as if to a friend. [cite: 641]",
+            "What is something you appreciate about the time you live in now? [cite: 642]",
+            "Acknowledge your inner strength from a hard time. [cite: 643]",
+            "Recall a recent moment when someone was kind to you. [cite: 644]",
+            "What is one small object you are grateful for? [cite: 646]",
+            "Describe a recent moment when you felt completely at peace. [cite: 646]",
+            "Recall a time you felt grateful for something a loved one did. [cite: 647]",
+            "Name one positive thing from today, even if it was small. [cite: 648]",
+            "Write a short thank-you note to yourself for something you handled well. [cite: 649]",
+            "What is one small thing you look forward to this week? [cite: 650]",
+            "Imagine your life one year from now. What is the most important change? [cite: 651-652]",
+            "List five tools or items that make daily life easier. [cite: 652]",
+            "What are three good things you have today that you didn’t have five years ago? [cite: 653]",
+            "Describe a recent time where you made use of your natural strengths. [cite: 654]",
+            "What is an achievement you are truly proud of? [cite: 655]",
+            "What do you need more of right now? What is one small step toward it? [cite: 656-657]",
+            "What about this period of your life might you one day feel grateful to remember? [cite: 657]",
+            "What is a skill you have that might surprise people? [cite: 658]",
+            "What is one way you have grown recently? [cite: 659]",
+            "Describe yourself using five positive words. [cite: 660]",
+            "When did you last feel you didn’t have to pretend? [cite: 661-662]",
+            "What would a perfect day look like for you? [cite: 662]",
+            "What is your favorite part of everyday life? [cite: 663]",
+            "What is one of the qualities in your personality that you appreciate? [cite: 664]",
+            "How do you hope people close to you experience you? [cite: 665]",
+            "What activity brings you the most joy? [cite: 666]",
+            "What is one thing you appreciate about your body? [cite: 667]",
+            "Recall a time you took a stand for something that mattered. [cite: 668]",
+            "What does true happiness mean to you? [cite: 669]",
+            "Describe to a stranger who you are in exactly 20 words. [cite: 670]",
+            "Which part of your day do you look forward to the most? [cite: 671]",
+            "List three small things that help you relax or breathe easier. [cite: 672]",
+            "What place would you love to visit again? [cite: 673]",
+            "Forgive yourself for one thing. What changes when you do? [cite: 674-675]",
+            "Describe a favorite childhood memory. [cite: 675-676]",
+            "What life lesson shaped who you are today? [cite: 676]",
+            "What song always lifts your mood? [cite: 677]",
+            "What part of your health are you grateful for today? [cite: 678]",
+            "What is one important thing you learned about yourself this year? [cite: 679]",
+            "What would be one intention you would set for the coming week? [cite: 680]",
+            "Remember a time you did better than you expected. [cite: 681]",
+            "What are you learning about yourself right now? [cite: 682]",
+            "Who would you call in an emergency? [cite: 683]",
+            "Describe a small act of kindness you did recently. [cite: 684]",
+            "What is a boundary you recently set to protect your peace? [cite: 685]",
+            "What is one of the most important pieces of advice you have received? [cite: 686]",
+            "What would you tell your 12-year-old self today? [cite: 687]"
+        ];
+
+        function getRandomPrompt() {
+            const display = document.getElementById('prompt-display');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * prompts.length);
+                display.innerText = prompts[randomIndex];
+                display.style.opacity = 1;
+            }, 500);
+        }
+
+        function toggleModal() {
+            const modal = document.getElementById('aboutModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Initial load
+        window.onload = getRandomPrompt;
+    </script>
+</body>
+</html>

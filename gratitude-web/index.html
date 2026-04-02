@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gratitude Journal</title>
+    <meta
+        name="description"
+        content="A calm, accessible space for gratitude prompts, gentle reflection, and community encouragement."
+    >
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="color-scheme" content="light dark">
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action https://formspree.io; script-src 'self' https://gc.zgo.at; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://gc.zgo.at https://gratitudejournal.goatcounter.com; frame-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap"
+    >
+    <link rel="stylesheet" href="styles.css">
+    <script
+        data-goatcounter="https://gratitudejournal.goatcounter.com/count"
+        async
+        src="https://gc.zgo.at/count.js"
+    ></script>
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <nav class="top-nav" aria-label="Utility navigation">
+        <button type="button" class="btn-subtle" data-overlay-trigger="aboutOverlay">About</button>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch color theme">
+            <span id="theme-icon" aria-hidden="true">Moon</span>
+        </button>
+    </nav>
+
+    <main id="main-content" class="site-shell">
+        <noscript>
+            <p class="noscript-notice">
+                This space uses JavaScript to rotate prompts and open the reflection panels.
+            </p>
+        </noscript>
+
+        <section class="hero-panel" aria-labelledby="journal-title">
+            <p class="eyebrow" id="journal-title">The Gratitude Journal</p>
+            <h1 id="prompt-display" class="prompt-display" aria-live="polite">
+                Take a quiet breath while your first prompt appears.
+            </h1>
+            <p class="supporting-copy">
+                A low-pressure place to notice something steady, kind, or hopeful in your day.
+            </p>
+
+            <div class="button-group">
+                <button type="button" class="btn" id="reflect-button" data-overlay-trigger="reflectOverlay" disabled>
+                    Reflect on this
+                </button>
+                <button type="button" class="btn btn-secondary" id="new-prompt-button">
+                    Get Another Prompt
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div
+        id="aboutOverlay"
+        class="overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="about-title"
+        hidden
+    >
+        <div class="overlay-content">
+            <button type="button" class="btn-subtle overlay-close-btn" data-close-overlay>Close</button>
+
+            <section class="about-section">
+                <h2 id="about-title">About</h2>
+                <p>
+                    <em>The Gratitude Journal</em> is an easy-to-reach space for positive reflection.
+                    It is designed to help slow down stress, interrupt negative spirals, and make room
+                    for the small things that are still worth noticing.
+                </p>
+                <p>
+                    Every prompt you see on this site was chosen to gently shift attention from what is
+                    missing toward what is already present. The 90 prompts in this collection are drawn
+                    from
+                    <a
+                        href="https://ruishinor.gumroad.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    ><em>The Complete Gratitude Workbook</em></a>.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Why this space exists</h2>
+                <p>
+                    Gratitude practice will not solve everything, but it can create a moment of steadier
+                    breathing and clearer perspective. That small pause matters, especially on hard days.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Sharing safely</h2>
+                <p>
+                    You do not need to submit anything to benefit from this site. If you do share a
+                    reflection, only include what feels safe to make public. Avoid names, addresses,
+                    medical details, or anything you would not want reviewed or published.
+                </p>
+                <p>
+                    Community submissions are reviewed before they are shared, and may be lightly edited
+                    for clarity.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Support</h2>
+                <p>
+                    If you are struggling right now, please reach out to someone you trust and change
+                    your environment if you can. Get some air. Walk. Call or message someone. Small acts
+                    of connection can help break isolation.
+                </p>
+                <p class="support-note">
+                    This site is not a crisis service. If you feel unsafe or in immediate danger, contact
+                    your local emergency services or a crisis support line in your area right away.
+                </p>
+                <p>
+                    This website was created by Holf Services, and published under the
+                    <a
+                        href="https://ruishinor.gumroad.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    ><em>RuishiNOR</em></a> name.
+                </p>
+            </section>
+        </div>
+    </div>
+
+    <div
+        id="reflectOverlay"
+        class="overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reflect-title"
+        hidden
+    >
+        <div class="overlay-content">
+            <button type="button" class="btn-subtle overlay-close-btn" data-close-overlay>Close</button>
+            <p class="overlay-label" id="reflect-title">Reflection</p>
+            <p id="locked-prompt" class="locked-prompt"></p>
+            <p class="privacy-note" id="reflection-help">
+                Share only what feels safe. Submissions are reviewed before anything is published.
+            </p>
+
+            <form
+                action="https://formspree.io/f/xdaloqzj"
+                method="POST"
+                accept-charset="UTF-8"
+                class="stack-form"
+            >
+                <input type="hidden" name="prompt" id="hidden-prompt-input">
+                <label class="visually-hidden" for="reflection-text">Your reflection</label>
+                <input
+                    type="text"
+                    name="_gotcha"
+                    class="honeypot"
+                    tabindex="-1"
+                    autocomplete="off"
+                    aria-hidden="true"
+                >
+                <textarea
+                    id="reflection-text"
+                    name="reflection"
+                    placeholder="Write your reflection here..."
+                    aria-describedby="reflection-help reflection-count"
+                    maxlength="2000"
+                    required
+                ></textarea>
+                <div class="form-meta">
+                    <span id="reflection-count" aria-live="polite">0 / 2000</span>
+                </div>
+                <button type="submit" class="btn">Submit Reflection</button>
+            </form>
+        </div>
+    </div>
+
+    <div
+        id="feedbackOverlay"
+        class="overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="feedback-title"
+        hidden
+    >
+        <div class="overlay-content">
+            <button type="button" class="btn-subtle overlay-close-btn" data-close-overlay>Close</button>
+
+            <section class="about-section">
+                <h2 id="feedback-title">Feedback</h2>
+                <p>Thank you for helping improve the space. This form is anonymous.</p>
+            </section>
+
+            <form
+                action="https://formspree.io/f/mqedazqy"
+                method="POST"
+                accept-charset="UTF-8"
+                class="stack-form"
+            >
+                <input
+                    type="text"
+                    name="_gotcha"
+                    class="honeypot"
+                    tabindex="-1"
+                    autocomplete="off"
+                    aria-hidden="true"
+                >
+
+                <label for="experience-select">How was your experience using the site today?</label>
+                <select id="experience-select" name="user_experience">
+                    <option value="" selected>Choose an option...</option>
+                    <option value="Positive: Good">I feel a bit better or calmer</option>
+                    <option value="Positive: Useful">I found the prompt useful</option>
+                    <option value="Neutral: Just curious">I was just curious about the site</option>
+                    <option value="Negative: Not for me">I feel a bit worse</option>
+                </select>
+
+                <label for="return-select">Do you think you will come back again in the future?</label>
+                <select id="return-select" name="return_intent">
+                    <option value="" selected>Choose one...</option>
+                    <option value="Yes: Likely to return">Yes, I will probably come back</option>
+                    <option value="Maybe: If needed">Maybe when I need it</option>
+                    <option value="No: Unlikely">Probably not</option>
+                </select>
+
+                <label for="feedback-text">Is there anything else you would like to share?</label>
+                <textarea
+                    id="feedback-text"
+                    name="additional_feedback"
+                    placeholder="Your thoughts..."
+                    maxlength="1200"
+                ></textarea>
+                <button type="submit" class="btn">Send Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <div
+        id="galleryOverlay"
+        class="overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gallery-title"
+        hidden
+    >
+        <div class="overlay-content">
+            <button type="button" class="btn-subtle overlay-close-btn" data-close-overlay>Back</button>
+            <h2 id="gallery-title" class="gallery-title">Community Notes</h2>
+            <div id="gallery-list" class="gallery-list"></div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-links">
+            <button type="button" class="footer-link" data-overlay-trigger="galleryOverlay">
+                Read Community Notes
+            </button>
+            <button type="button" class="footer-link" data-overlay-trigger="feedbackOverlay">
+                Give Feedback
+            </button>
+        </div>
+
+        <section class="share-section" aria-labelledby="share-title">
+            <p id="share-title" class="share-text">Help this space reach more people</p>
+            <div class="share-grid" role="group" aria-label="Share this site">
+                <button type="button" class="share-button" data-share="threads">Threads</button>
+                <button type="button" class="share-button" data-share="reddit">Reddit</button>
+                <button type="button" class="share-button" data-share="facebook">Facebook</button>
+                <button type="button" class="share-button" data-share="x">X</button>
+                <button type="button" class="share-button" data-share="whatsapp">WhatsApp</button>
+                <button type="button" class="share-button" data-share="linkedin">LinkedIn</button>
+                <button type="button" class="share-button" data-share="copy">Copy Link</button>
+            </div>
+            <p id="share-status" class="share-status" aria-live="polite"></p>
+        </section>
+
+        <div class="stats-counter" aria-label="Usage statistics">
+            <span><span id="prompt-count">0</span> prompts opened on this device</span>
+            <span class="stats-divider">&middot;</span>
+            <span>90 prompts in the collection</span>
+        </div>
+
+        <a
+            href="https://buymeacoffee.com/ruishinor"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="support-link"
+        >
+            If you want to support this work, you can do that here.
+        </a>
+
+        <div class="copyright">
+            &copy; <span id="year"></span> Holf Services. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>
