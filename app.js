@@ -159,6 +159,7 @@ function init() {
     dom.lockedPrompt = document.getElementById("locked-prompt");
     dom.hiddenPromptInput = document.getElementById("hidden-prompt-input");
     dom.promptCount = document.getElementById("prompt-count");
+    dom.visitorCount = document.getElementById("visitor-count");
     dom.shareStatus = document.getElementById("share-status");
     dom.year = document.getElementById("year");
     dom.reflectionText = document.getElementById("reflection-text");
@@ -172,6 +173,7 @@ function init() {
     initTheme();
     updatePromptCount();
     updateReflectionCount();
+    fetchVisitorCount();
     dom.year.textContent = String(new Date().getFullYear());
     getRandomPrompt();
 }
@@ -438,6 +440,30 @@ function incrementPromptCount() {
 
 function updatePromptCount() {
     dom.promptCount.textContent = promptsViewed.toLocaleString();
+}
+
+function fetchVisitorCount() {
+    if (!dom.visitorCount) {
+        return;
+    }
+
+    fetch("https://gratitudejournal.goatcounter.com/api/v0/stats", {
+        headers: {
+            Authorization: "Bearer ralgjnosnk8523u2xvqvq0yboqkt9j0ela6bd6k0lq6uy41qw"
+        }
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.total) {
+                dom.visitorCount.textContent = data.total.toLocaleString();
+            } else if (data.stats) {
+                const total = data.stats.reduce((sum, s) => sum + (s.count || 0), 0);
+                dom.visitorCount.textContent = total.toLocaleString();
+            }
+        })
+        .catch(() => {
+            dom.visitorCount.textContent = "—";
+        });
 }
 
 function updateReflectionCount() {
