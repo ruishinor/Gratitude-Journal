@@ -1,2 +1,18 @@
+# Dependencies
 node_modules/
+
+# Build artifacts
 verification-home.png
+
+# Archive - historical backup files (may contain security issues)
+Archive/
+
+# Inspiration - copied third-party website assets (copyright concerns)
+Inspiration/
+
+# Agent workspace - IDEs, agents, and sidecar memory
+gratitude-web/
+
+# OS files
+.DS_Store
+Thumbs.db
