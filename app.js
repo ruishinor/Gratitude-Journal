@@ -152,6 +152,8 @@ const dom = {};
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
+    initCrashHandler();
+
     dom.siteShell = document.querySelector(".site-shell");
     dom.promptDisplay = document.getElementById("prompt-display");
     dom.reflectButton = document.getElementById("reflect-button");
@@ -159,7 +161,6 @@ function init() {
     dom.lockedPrompt = document.getElementById("locked-prompt");
     dom.hiddenPromptInput = document.getElementById("hidden-prompt-input");
     dom.promptCount = document.getElementById("prompt-count");
-    dom.visitorCount = document.getElementById("visitor-count");
     dom.shareStatus = document.getElementById("share-status");
     dom.year = document.getElementById("year");
     dom.reflectionText = document.getElementById("reflection-text");
@@ -167,6 +168,11 @@ function init() {
     dom.galleryList = document.getElementById("gallery-list");
     dom.themeToggle = document.querySelector("[data-theme-toggle]");
     dom.themeIcon = document.getElementById("theme-icon");
+    dom.notesCount = document.getElementById("notes-count");
+    dom.cookieBanner = document.getElementById("cookie-banner");
+    dom.cookieAcceptBtn = document.getElementById("cookie-accept-btn");
+    dom.cookieDeclineBtn = document.getElementById("cookie-decline-btn");
+    dom.cookieSettingsTrigger = document.getElementById("cookie-settings-trigger");
 
     bindEvents();
     restoreOverlayState();
@@ -174,7 +180,10 @@ function init() {
     initTheme();
     updatePromptCount();
     updateReflectionCount();
-    fetchVisitorCount();
+    syncAnalyticsState();
+    checkCookieConsent();
+    setupFormSecurity();
+    initAdminStats();
     dom.year.textContent = String(new Date().getFullYear());
     getRandomPrompt();
 }
@@ -203,6 +212,56 @@ function bindEvents() {
     document.querySelectorAll("[data-share]").forEach((button) => {
         button.addEventListener("click", () => socialShare(button.dataset.share));
     });
+
+    const checkbox = document.getElementById("cookie-consent-checkbox");
+    if (checkbox) {
+        checkbox.addEventListener("change", (e) => {
+            storage.set("cookieConsent", String(e.target.checked));
+            syncAnalyticsState();
+            checkCookieConsent();
+        });
+    }
+
+    if (dom.cookieAcceptBtn) {
+        dom.cookieAcceptBtn.addEventListener("click", () => {
+            storage.set("cookieConsent", "true");
+            syncAnalyticsState();
+            checkCookieConsent();
+        });
+    }
+
+    if (dom.cookieDeclineBtn) {
+        dom.cookieDeclineBtn.addEventListener("click", () => {
+            storage.set("cookieConsent", "false");
+            syncAnalyticsState();
+            checkCookieConsent();
+        });
+    }
+
+    if (dom.cookieSettingsTrigger) {
+        dom.cookieSettingsTrigger.addEventListener("click", () => {
+            if (dom.cookieBanner) {
+                dom.cookieBanner.hidden = true;
+                dom.cookieBanner.classList.remove("is-visible");
+            }
+            openOverlay("settingsOverlay");
+        });
+    }
+
+    const exportBtn = document.getElementById("export-data-btn");
+    if (exportBtn) {
+        exportBtn.addEventListener("click", exportUserData);
+    }
+
+    const deleteBtn = document.getElementById("delete-data-btn");
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", deleteUserData);
+    }
+
+    const fetchStatsBtn = document.getElementById("fetch-admin-stats-btn");
+    if (fetchStatsBtn) {
+        fetchStatsBtn.addEventListener("click", fetchAdminStats);
+    }
 
     document.addEventListener("keydown", handleGlobalKeydown);
 }
@@ -342,6 +401,10 @@ function closeAllOverlays(options = {}) {
         overlay.hidden = true;
     });
 
+    if (activeOverlay && history.state?.overlay === activeOverlay.id) {
+        history.replaceState(null, "");
+    }
+
     activeOverlay = null;
     document.body.classList.remove("overlay-open");
     dom.siteShell.classList.remove("blurred");
@@ -367,6 +430,10 @@ function restoreOverlayState() {
 
 function renderGallery() {
     dom.galleryList.textContent = "";
+
+    if (dom.notesCount) {
+        dom.notesCount.textContent = String(galleryEntries.length);
+    }
 
     galleryEntries.forEach((entry) => {
         const entryDiv = document.createElement("article");
@@ -437,7 +504,8 @@ function incrementPromptCount() {
     storage.set("promptsViewed", String(promptsViewed));
     updatePromptCount();
 
-    if (window.goatcounter && typeof window.goatcounter.count === "function") {
+    const consent = storage.get("cookieConsent", "false") === "true";
+    if (consent && window.goatcounter && typeof window.goatcounter.count === "function") {
         window.goatcounter.count({
             path: "/event/prompt-delivered",
             title: "Prompt Delivered",
@@ -448,30 +516,6 @@ function incrementPromptCount() {
 
 function updatePromptCount() {
     dom.promptCount.textContent = promptsViewed.toLocaleString();
-}
-
-function fetchVisitorCount() {
-    if (!dom.visitorCount) {
-        return;
-    }
-
-    fetch("https://gratitudejournal.goatcounter.com/api/v0/stats", {
-        headers: {
-            Authorization: "Bearer ralgjnosnk8523u2xvqvq0yboqkt9j0ela6bd6k0lq6uy41qw"
-        }
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.total) {
-                dom.visitorCount.textContent = data.total.toLocaleString();
-            } else if (data.stats) {
-                const total = data.stats.reduce((sum, s) => sum + (s.count || 0), 0);
-                dom.visitorCount.textContent = total.toLocaleString();
-            }
-        })
-        .catch(() => {
-            dom.visitorCount.textContent = "—";
-        });
 }
 
 function updateReflectionCount() {
@@ -505,4 +549,239 @@ function applyTheme(theme) {
         dom.themeIcon.textContent = "Dark";
         dom.themeToggle.setAttribute("aria-label", "Switch to dark theme");
     }
+}
+
+function syncAnalyticsState() {
+    const consent = storage.get("cookieConsent", "false") === "true";
+    const checkbox = document.getElementById("cookie-consent-checkbox");
+    if (checkbox) {
+        checkbox.checked = consent;
+    }
+
+    if (consent) {
+        loadGoatCounter();
+    } else {
+        removeGoatCounter();
+    }
+}
+
+function checkCookieConsent() {
+    if (!dom.cookieBanner) {
+        return;
+    }
+    const consentStored = window.localStorage.getItem("cookieConsent");
+    if (consentStored === null) {
+        dom.cookieBanner.hidden = false;
+        setTimeout(() => {
+            dom.cookieBanner.classList.add("is-visible");
+        }, 10);
+    } else {
+        dom.cookieBanner.classList.remove("is-visible");
+        setTimeout(() => {
+            if (!dom.cookieBanner.classList.contains("is-visible")) {
+                dom.cookieBanner.hidden = true;
+            }
+        }, 300);
+    }
+}
+
+function loadGoatCounter() {
+    if (document.getElementById("goatcounter-script")) {
+        return;
+    }
+    const script = document.createElement("script");
+    script.id = "goatcounter-script";
+    script.async = true;
+    script.src = "https://gc.zgo.at/count.js";
+    script.dataset.goatcounter = "https://ruishinor.goatcounter.com/count";
+    document.head.appendChild(script);
+}
+
+function removeGoatCounter() {
+    const script = document.getElementById("goatcounter-script");
+    if (script) {
+        script.remove();
+    }
+    if (window.goatcounter) {
+        delete window.goatcounter;
+    }
+}
+
+function exportUserData() {
+    const data = {
+        exportedAt: new Date().toISOString(),
+        application: "The Gratitude Journal",
+        theme: storage.get("theme", "light"),
+        promptsViewed: Number.parseInt(storage.get("promptsViewed", "0"), 10) || 0,
+        cookieConsent: storage.get("cookieConsent", "false") === "true"
+    };
+
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "gratitude-journal-data.json";
+    document.body.appendChild(a);
+    a.click();
+    
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function deleteUserData() {
+    const confirmed = window.confirm("Are you sure you want to delete all your local journaling data and settings? This action cannot be undone.");
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+    } catch (e) {
+        // Ignored
+    }
+
+    document.cookie.split(";").forEach((cookie) => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    });
+
+    alert("Your local data has been successfully erased. The application will now reload.");
+    window.location.reload();
+}
+
+function initCrashHandler() {
+    window.onerror = function (message, source, lineno, colno, error) {
+        showCrashUI(message || error?.message || "Unknown runtime error occurred");
+        return false;
+    };
+
+    window.onunhandledrejection = function (event) {
+        showCrashUI(event.reason?.message || "Unhandled Promise rejection");
+    };
+}
+
+function showCrashUI(errorText) {
+    if (document.getElementById("crash-banner")) {
+        return;
+    }
+
+    const banner = document.createElement("div");
+    banner.id = "crash-banner";
+    banner.setAttribute("role", "alert");
+    banner.className = "crash-banner";
+    
+    const title = document.createElement("strong");
+    title.textContent = "An unexpected error occurred.";
+    
+    const details = document.createElement("p");
+    details.textContent = errorText;
+    
+    const buttonGroup = document.createElement("div");
+    buttonGroup.className = "crash-buttons";
+    
+    const reloadBtn = document.createElement("button");
+    reloadBtn.type = "button";
+    reloadBtn.className = "btn btn-subtle";
+    reloadBtn.textContent = "Reload Page";
+    reloadBtn.addEventListener("click", () => window.location.reload());
+    
+    const resetBtn = document.createElement("button");
+    resetBtn.type = "button";
+    resetBtn.className = "btn btn-subtle btn-reset-local";
+    resetBtn.textContent = "Reset Local Storage";
+    resetBtn.addEventListener("click", () => {
+        if (window.confirm("This will clear your local settings and reload. Proceed?")) {
+            localStorage.clear();
+            window.location.reload();
+        }
+    });
+
+    buttonGroup.append(reloadBtn, resetBtn);
+    banner.append(title, details, buttonGroup);
+    document.body.prepend(banner);
+}
+
+function setupFormSecurity() {
+    document.querySelectorAll("form").forEach((form) => {
+        form.addEventListener("submit", (event) => {
+            const textareas = form.querySelectorAll("textarea");
+            let hasPII = false;
+            
+            textareas.forEach((textarea) => {
+                const value = textarea.value;
+                const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                const phonePattern = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
+
+                if (emailPattern.test(value) || phonePattern.test(value)) {
+                    hasPII = true;
+                }
+            });
+
+            if (hasPII) {
+                const proceed = window.confirm("Warning: Your submission appears to contain personal contact details (email or phone number). To protect your privacy and comply with GDPR guidelines, please do not share personal details. Do you want to submit anyway?");
+                if (!proceed) {
+                    event.preventDefault();
+                }
+            }
+        });
+    });
+}
+
+function initAdminStats() {
+    const savedToken = storage.get("adminToken", "");
+    const tokenInput = document.getElementById("admin-token-input");
+    if (savedToken && tokenInput) {
+        tokenInput.value = savedToken;
+        fetchAdminStats();
+    }
+}
+
+function fetchAdminStats() {
+    const tokenInput = document.getElementById("admin-token-input");
+    const statsDisplay = document.getElementById("admin-stats-display");
+    const countDisplay = document.getElementById("admin-visitor-count");
+    
+    if (!tokenInput || !statsDisplay || !countDisplay) {
+        return;
+    }
+
+    const token = tokenInput.value.trim();
+    if (!token) {
+        alert("Please enter a GoatCounter API token first.");
+        return;
+    }
+
+    statsDisplay.classList.add("is-visible");
+    countDisplay.textContent = "Fetching...";
+
+    fetch("https://ruishinor.goatcounter.com/api/v0/stats", {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            let total = 0;
+            if (data.total) {
+                total = data.total;
+            } else if (data.stats) {
+                const totalCount = data.stats.reduce((sum, s) => sum + (s.count || 0), 0);
+                total = totalCount;
+            }
+            countDisplay.textContent = total.toLocaleString();
+            storage.set("adminToken", token);
+        })
+        .catch((err) => {
+            countDisplay.textContent = "Error loading stats";
+            console.error("Failed to fetch admin stats:", err);
+        });
 }

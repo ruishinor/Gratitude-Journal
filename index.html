@@ -12,27 +12,23 @@
     <meta name="color-scheme" content="light dark">
     <meta
         http-equiv="Content-Security-Policy"
-        content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action https://formspree.io; script-src 'self' https://gc.zgo.at; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://gc.zgo.at https://gratitudejournal.goatcounter.com; frame-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; form-action https://formspree.io; script-src 'self' https://gc.zgo.at; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://gc.zgo.at https://ruishinor.goatcounter.com; frame-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
     >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap"
     >
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="styles.css">
-    <script
-        data-goatcounter="https://gratitudejournal.goatcounter.com/count"
-        async
-        src="https://gc.zgo.at/count.js"
-    ></script>
     <script src="app.js" defer></script>
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <nav class="top-nav" aria-label="Utility navigation">
-        <button type="button" class="btn-subtle" data-overlay-trigger="aboutOverlay">About</button>
+        <button type="button" class="btn-subtle" data-overlay-trigger="settingsOverlay">Settings</button>
         <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch color theme">
             <span id="theme-icon" aria-hidden="true">Dark</span>
         </button>
@@ -65,79 +61,7 @@
         </section>
     </main>
 
-    <div
-        id="aboutOverlay"
-        class="overlay"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="about-title"
-        hidden
-    >
-        <div class="overlay-content">
-            <button type="button" class="btn-subtle overlay-close-btn" data-close-overlay>Close</button>
-
-            <section class="about-section">
-                <h2 id="about-title">About</h2>
-                <p>
-                    <em>The Gratitude Journal</em> is an easy-to-reach space for positive reflection.
-                    It is designed to help slow down stress, interrupt negative spirals, and make room
-                    for the small things that are still worth noticing.
-                </p>
-                <p>
-                    Every prompt you see on this site was chosen to gently shift attention from what is
-                    missing toward what is already present. The 90 prompts in this collection are drawn
-                    from
-                    <a
-                        href="https://ruishinor.gumroad.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    ><em>The Complete Gratitude Workbook</em></a>.
-                </p>
-            </section>
-
-            <section class="about-section">
-                <h2>Why this space exists</h2>
-                <p>
-                    Gratitude practice will not solve everything, but it can create a moment of steadier
-                    breathing and clearer perspective. That small pause matters, especially on hard days.
-                </p>
-            </section>
-
-            <section class="about-section">
-                <h2>Sharing safely</h2>
-                <p>
-                    You do not need to submit anything to benefit from this site. If you do share a
-                    reflection, only include what feels safe to make public. Avoid names, addresses,
-                    medical details, or anything you would not want reviewed or published.
-                </p>
-                <p>
-                    Community submissions are reviewed before they are shared, and may be lightly edited
-                    for clarity.
-                </p>
-            </section>
-
-            <section class="about-section">
-                <h2>Support</h2>
-                <p>
-                    If you are struggling right now, please reach out to someone you trust and change
-                    your environment if you can. Get some air. Walk. Call or message someone. Small acts
-                    of connection can help break isolation.
-                </p>
-                <p class="support-note">
-                    This site is not a crisis service. If you feel unsafe or in immediate danger, contact
-                    your local emergency services or a crisis support line in your area right away.
-                </p>
-                <p>
-                    This website was created by Holf Services, and published under the
-                    <a
-                        href="https://ruishinor.gumroad.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    ><em>RuishiNOR</em></a> name.
-                </p>
-            </section>
-        </div>
-    </div>
+    <!-- About Overlay removed and consolidated into Settings & Privacy -->
 
     <div
         id="reflectOverlay"
@@ -152,7 +76,7 @@
             <p class="overlay-label" id="reflect-title">Reflection</p>
             <p id="locked-prompt" class="locked-prompt"></p>
             <p class="privacy-note" id="reflection-help">
-                Share only what feels safe. Submissions are reviewed before anything is published.
+                <strong>GDPR Notice:</strong> Share only what feels safe. Do not submit names, phone numbers, addresses, emails, or personal identifiers. Submissions are reviewed manually before publication.
             </p>
 
             <form
@@ -200,7 +124,7 @@
 
             <section class="about-section">
                 <h2 id="feedback-title">Feedback</h2>
-                <p>Thank you for helping improve the space. This form is anonymous.</p>
+                <p>Thank you for helping improve the space. This form is anonymous. <strong>GDPR Notice:</strong> Please do not include any personally identifiable information (PII) in your feedback.</p>
             </section>
 
             <form
@@ -262,10 +186,185 @@
         </div>
     </div>
 
+    <div
+        id="settingsOverlay"
+        class="overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-title"
+        hidden
+    >
+        <div class="overlay-content">
+            <button type="button" class="btn-subtle overlay-close-btn" data-close-overlay>Close</button>
+            
+            <section class="settings-section">
+                <h2 id="settings-title" class="settings-title">Settings & Privacy</h2>
+                <p>Manage your preferences, view legal documentation, and control your data.</p>
+            </section>
+
+            <section class="settings-section">
+                <h3>About The Gratitude Journal</h3>
+                <div class="about-accordion">
+                    <details class="about-item" open>
+                        <summary>What is this space?</summary>
+                        <p>
+                            <em>The Gratitude Journal</em> is an easy-to-reach space for positive reflection.
+                            It is designed to help slow down stress, interrupt negative spirals, and make room
+                            for the small things that are still worth noticing.
+                        </p>
+                        <p>
+                            Every prompt you see on this site was chosen to gently shift attention from what is
+                            missing toward what is already present. The 90 prompts in this collection are pulled
+                            from
+                            <a
+                                href="https://ruishinor.gumroad.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            ><em>The Complete Gratitude Workbook</em></a>.
+                        </p>
+                    </details>
+                    <details class="about-item">
+                        <summary>Why this space exists</summary>
+                        <p>
+                            Gratitude practice will not solve everything, but it can create a moment of steadier
+                            breathing and clearer perspective. That small pause matters, especially on hard days.
+                        </p>
+                    </details>
+                    <details class="about-item">
+                        <summary>Sharing safely</summary>
+                        <p>
+                            You do not need to submit anything to benefit from this site. If you do share a
+                            reflection, only include what feels safe to make public. Avoid names, addresses,
+                            medical details, or anything you would not want reviewed or published.
+                        </p>
+                        <p>
+                            Community submissions are reviewed before they are shared, and may be lightly edited
+                            for clarity.
+                        </p>
+                    </details>
+                    <details class="about-item">
+                        <summary>Support</summary>
+                        <p>
+                            If you are struggling right now, please reach out to someone you trust and change
+                            your environment if you can. Get some air. Walk. Call or message someone. Small acts
+                            of connection can help break isolation.
+                        </p>
+                        <p class="support-note">
+                            This site is not a crisis service. If you feel unsafe or in immediate danger, contact
+                            your local emergency services or a crisis support line in your area right away.
+                        </p>
+                        <p>
+                            This website was created by Holf Services, and published under the
+                            <a
+                                href="https://ruishinor.gumroad.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            ><em>RuishiNOR</em></a> brand.
+                        </p>
+                    </details>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Cookie & Tracking Preferences</h3>
+                <div class="toggle-container">
+                    <label class="toggle-label" for="cookie-consent-checkbox">
+                        <input type="checkbox" id="cookie-consent-checkbox">
+                        <span class="toggle-text">Enable anonymous site statistics (GoatCounter)</span>
+                    </label>
+                </div>
+                <p class="privacy-note">
+                    If enabled, we load anonymous analytics from GoatCounter to understand aggregate visitor patterns. No personal data or IP addresses are persisted.
+                </p>
+            </section>
+
+            <section class="settings-section">
+                <h3>Data Management & Right to be Forgotten (GDPR)</h3>
+                <div class="button-group-settings">
+                    <button type="button" class="btn btn-secondary" id="export-data-btn">Export My Data (Art. 20)</button>
+                    <button type="button" class="btn btn-danger" id="delete-data-btn">Delete All My Data (Art. 17)</button>
+                </div>
+                <p class="privacy-note">
+                    Your reflections and settings are stored locally. Use these options to export your usage statistics as a JSON file, or permanently erase all local storage.
+                </p>
+                <div class="delete-request-container">
+                    <h4>Request deletion of shared notes:</h4>
+                    <p class="privacy-note">
+                        If you have previously submitted a reflection to the public gallery and would like it deleted under GDPR Article 17, click below to email our data protection office with details of your note.
+                    </p>
+                    <a href="mailto:info@holf.services?subject=GDPR%20Article%2017%20Deletion%20Request&body=Hello%20Holf%20Services%20Data%20Protection%20Officer,%0D%0A%0D%0AI%20am%20requesting%20the%20deletion%20of%20my%20previously%20submitted%20gratitude%20reflection%20under%20GDPR%20Article%2017.%0D%0A%0D%0APrompt%20Text:%20[Please%20specify]%0D%0AReflection%20Text:%20[Please%20specify]%0D%0A%0D%0AThank%20you." class="contact-link">Request Online Note Deletion</a>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-accordion">
+                    <details class="faq-item">
+                        <summary>Where is my journaling data saved?</summary>
+                        <p>All your journaling prompts and writing remain 100% client-side. The app uses your browser's local storage to save your settings. We do not store your reflections on any server unless you explicitly submit them to the community notes.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How do I request deletion of a submitted note?</summary>
+                        <p>Submissions are reviewed manually before publication. If you have submitted a reflection and wish to have it removed under GDPR Article 17, please contact us at the address below with details of your note.</p>
+                    </details>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Legal Documentation</h3>
+                <div class="legal-accordion">
+                    <details class="legal-item">
+                        <summary>Privacy Policy</summary>
+                        <div class="legal-scroll">
+                            <h4>1. Data Minimization & Security</h4>
+                            <p>We process all journaling inputs client-side. We do not store or process personal identification data. Submission forms collect your text input anonymously using Formspree.</p>
+                            <h4>2. Cookies & Analytics</h4>
+                            <p>We do not use tracking cookies by default. GoatCounter analytics is disabled unless you opt-in above. We adhere to the EEA and Norwegian data privacy regulations.</p>
+                            <h4>3. Contact Information</h4>
+                            <p>For any privacy requests or inquiries, email Holf Services at info@holf.services.</p>
+                        </div>
+                    </details>
+                    <details class="legal-item">
+                        <summary>Terms & Conditions</summary>
+                        <div class="legal-scroll">
+                            <h4>1. Agreement to Terms</h4>
+                            <p>By using The Gratitude Journal, you agree to these terms. The site is a free mental wellbeing utility provided by Holf Services.</p>
+                            <h4>2. Code of Conduct</h4>
+                            <p>Do not submit reflections containing personally identifiable info, offensive material, or spam. Holf Services retains absolute discretion to review, edit, or delete submissions before gallery publication.</p>
+                            <h4>3. Disclaimer</h4>
+                            <p>This site is not a crisis support tool. If you require urgent mental health assistance, please contact your local emergency services.</p>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h3>Admin Statistics</h3>
+                <div class="stack-form">
+                    <label for="admin-token-input">GoatCounter API Token</label>
+                    <input type="password" id="admin-token-input" placeholder="Enter API token...">
+                    <button type="button" class="btn btn-secondary" id="fetch-admin-stats-btn">Fetch Live Stats</button>
+                </div>
+                <div id="admin-stats-display" class="admin-stats-display">
+                    <p>Total All-Time Visitors: <strong id="admin-visitor-count">—</strong></p>
+                </div>
+                <p class="privacy-note">
+                    Your token is stored locally in your browser and is never sent to any server other than GoatCounter.
+                </p>
+            </section>
+
+            <section class="settings-section support-contact">
+                <h3>Support & Contact</h3>
+                <p>For support, legal requests, or general inquiries, contact us at:</p>
+                <a href="mailto:info@holf.services" class="contact-link">info@holf.services</a>
+            </section>
+        </div>
+    </div>
+
     <footer class="site-footer">
         <div class="footer-links">
-            <button type="button" class="footer-link" data-overlay-trigger="galleryOverlay">
-                Read Community Notes
+            <button type="button" class="footer-link" data-overlay-trigger="galleryOverlay" id="read-notes-btn">
+                Read Community Notes (<span id="notes-count">0</span>)
             </button>
             <button type="button" class="footer-link" data-overlay-trigger="feedbackOverlay">
                 Give Feedback
@@ -287,9 +386,7 @@
         </section>
 
         <div class="stats-counter" aria-label="Usage statistics">
-            <span><span id="visitor-count">--</span> visits</span>
-            <span class="stats-divider">&middot;</span>
-            <span><span id="prompt-count">0</span> prompts viewed</span>
+            <span><span id="prompt-count">0</span> prompts opened on this device</span>
             <span class="stats-divider">&middot;</span>
             <span>90 prompts in the collection</span>
         </div>
@@ -307,5 +404,17 @@
             &copy; <span id="year"></span> Holf Services. All rights reserved.
         </div>
     </footer>
+
+    <div id="cookie-banner" class="cookie-banner" role="region" aria-label="Cookie consent banner" hidden>
+        <div class="cookie-banner-content">
+            <p>
+                We use anonymous analytics to understand site traffic. Choose your preference. You can change this anytime in <button type="button" class="btn-subtle cookie-settings-link" id="cookie-settings-trigger">Settings</button>.
+            </p>
+            <div class="cookie-banner-buttons">
+                <button type="button" class="btn btn-subtle btn-cookie-decline" id="cookie-decline-btn">Decline</button>
+                <button type="button" class="btn btn-cookie-accept" id="cookie-accept-btn">Accept Analytics</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

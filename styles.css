@@ -3,13 +3,13 @@
     --bg-elevated: rgba(255, 250, 244, 0.9);
     --panel-color: rgba(255, 252, 247, 0.78);
     --text-color: #211d1a;
-    --muted-color: #6d655d;
-    --accent-color: #6d7f71;
-    --accent-strong: #4f6457;
+    --muted-color: #554e47; /* Improved contrast for WCAG AA/AAA compliance */
+    --accent-color: #4b5a4e; /* Sage green darkened for WCAG accessibility */
+    --accent-strong: #36493d; /* Forest green darkened for text contrast */
     --border-color: rgba(92, 82, 70, 0.16);
     --shadow-color: rgba(63, 48, 36, 0.14);
     --overlay-bg: rgba(251, 246, 239, 0.94);
-    --focus-ring: 0 0 0 3px rgba(109, 127, 113, 0.2);
+    --focus-ring: 0 0 0 3px rgba(75, 90, 78, 0.25);
 }
 
 [data-theme="dark"] {
@@ -17,7 +17,7 @@
     --bg-elevated: rgba(28, 27, 24, 0.9);
     --panel-color: rgba(34, 32, 28, 0.82);
     --text-color: #f4eee6;
-    --muted-color: #b9aea4;
+    --muted-color: #c2b7ac; /* Improved dark mode contrast */
     --accent-color: #a7bfab;
     --accent-strong: #d7e5d8;
     --border-color: rgba(242, 233, 224, 0.12);
@@ -43,7 +43,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: "Lora", serif;
+    font-family: "Lora", "Georgia", serif;
+    letter-spacing: 0.01em;
     color: var(--text-color);
     background:
         radial-gradient(circle at top left, rgba(211, 224, 214, 0.46), transparent 32%),
@@ -182,8 +183,8 @@ a {
 .prompt-display {
     margin: 0 auto 1.25rem;
     max-width: 32rem;
-    min-height: 8.5rem;
-    font-size: clamp(2rem, 4vw, 3.3rem);
+    min-height: 6rem;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
     line-height: 1.16;
     font-weight: 400;
     text-wrap: balance;
@@ -304,8 +305,16 @@ a {
 .copyright,
 .share-text,
 .stats-counter,
-.support-link {
-    font-family: "Inter", sans-serif;
+.support-link,
+.settings-section,
+.about-accordion,
+.about-item,
+.faq-accordion,
+.legal-accordion,
+.contact-link,
+.crash-banner {
+    font-family: "Atkinson Hyperlegible", "Inter", system-ui, -apple-system, sans-serif;
+    letter-spacing: 0.015em;
 }
 
 .noscript-notice {
@@ -420,7 +429,8 @@ a {
 }
 
 textarea,
-select {
+select,
+input[type="password"] {
     width: 100%;
     border-radius: 1rem;
     border: 1px solid var(--border-color);
@@ -436,10 +446,17 @@ textarea {
     line-height: 1.7;
 }
 
-select {
+select,
+input[type="password"] {
     min-height: 3.3rem;
     padding: 0.9rem 1rem;
     font-size: 1rem;
+}
+
+input[type="password"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: var(--focus-ring);
 }
 
 #feedback-text {
@@ -604,7 +621,7 @@ select option {
     }
 
     .prompt-display {
-        min-height: 7rem;
+        min-height: 4.8rem;
     }
 
     .btn {
@@ -637,4 +654,384 @@ select option {
         transition: none !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* Settings, Privacy & Crash Handling Styles */
+.settings-section {
+    margin-bottom: 2rem;
+}
+
+.settings-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.settings-section h3 {
+    margin: 0 0 0.85rem;
+    font-family: "Atkinson Hyperlegible", "Inter", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-color);
+}
+
+.settings-section p {
+    margin: 0 0 0.85rem;
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+/* About, FAQ & Legal Accordion */
+.about-accordion,
+.faq-accordion,
+.legal-accordion {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.about-item,
+.faq-item,
+.legal-item {
+    border: 1px solid var(--border-color);
+    border-radius: 0.85rem;
+    background: var(--bg-color);
+    padding: 0.85rem 1.1rem;
+    transition: background-color 0.2s ease;
+}
+
+.about-item[open],
+.faq-item[open],
+.legal-item[open] {
+    background: var(--bg-elevated);
+}
+
+.about-item summary,
+.faq-item summary,
+.legal-item summary {
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    padding: 0.2rem 0;
+    font-size: 0.98rem;
+    color: var(--text-color);
+}
+
+.about-item summary:focus-visible,
+.faq-item summary:focus-visible,
+.legal-item summary:focus-visible {
+    box-shadow: var(--focus-ring);
+    border-radius: 0.25rem;
+}
+
+.about-item p,
+.faq-item p {
+    margin: 0.8rem 0 0;
+    line-height: 1.65;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.legal-scroll {
+    max-height: 14rem;
+    overflow-y: auto;
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    padding-right: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.legal-scroll h4 {
+    margin: 0.85rem 0 0.35rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-strong);
+}
+
+.legal-scroll p {
+    margin: 0 0 0.85rem;
+}
+
+/* Toggle Switch */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.85rem 0;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    cursor: pointer;
+    font-size: 0.96rem;
+    font-weight: 500;
+    user-select: none;
+}
+
+.toggle-label input[type="checkbox"] {
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--border-color);
+    accent-color: var(--accent-strong);
+    cursor: pointer;
+}
+
+/* Button Group Settings */
+.button-group-settings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin: 0.85rem 0;
+}
+
+.btn-danger {
+    border: 1px solid #d32f2f;
+    color: #d32f2f;
+    background: transparent;
+}
+
+.btn-danger:hover,
+.btn-danger:focus-visible {
+    background: #d32f2f;
+    border-color: #d32f2f;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    border-color: #e57373;
+    color: #e57373;
+}
+
+[data-theme="dark"] .btn-danger:hover,
+[data-theme="dark"] .btn-danger:focus-visible {
+    background: #e57373;
+    border-color: #e57373;
+    color: #171614 !important;
+}
+
+[data-theme="dark"] .btn:hover:not(:disabled),
+[data-theme="dark"] .btn:focus-visible:not(:disabled),
+[data-theme="dark"] .share-button:hover,
+[data-theme="dark"] .share-button:focus-visible {
+    color: #171614;
+}
+
+/* Contact Details */
+.contact-link {
+    display: inline-block;
+    color: var(--accent-strong);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+}
+
+.contact-link:hover,
+.contact-link:focus-visible {
+    color: var(--text-color);
+}
+
+/* Crash Handler Banner */
+.crash-banner {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: #fff0f0;
+    border-bottom: 2px solid #ef5350;
+    color: #c62828;
+    padding: 1.1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+[data-theme="dark"] .crash-banner {
+    background: #2b1719;
+    border-bottom: 2px solid #e57373;
+    color: #ef5350;
+}
+
+.crash-banner strong {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.crash-banner p {
+    margin: 0;
+    font-size: 0.92rem;
+    opacity: 0.95;
+}
+
+.crash-buttons {
+    display: flex;
+    gap: 0.85rem;
+    margin-top: 0.3rem;
+}
+
+.crash-buttons button {
+    font-family: "Inter", sans-serif;
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.crash-buttons button:hover,
+.crash-buttons button:focus-visible {
+    background: rgba(198, 40, 40, 0.08);
+}
+
+[data-theme="dark"] .crash-buttons button:hover,
+[data-theme="dark"] .crash-buttons button:focus-visible {
+    background: rgba(239, 83, 80, 0.12);
+}
+
+.admin-stats-display {
+    display: none;
+    margin-top: 1rem;
+}
+
+.admin-stats-display.is-visible {
+    display: block;
+}
+
+/* Cookie Banner */
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 25;
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -8px 24px var(--shadow-color);
+    padding: 1.25rem 2rem;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.cookie-banner.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.cookie-banner-content {
+    width: min(72rem, 100%);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.cookie-banner p {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--muted-color);
+    flex: 1 1 35rem;
+}
+
+.cookie-settings-link {
+    color: var(--accent-strong);
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-underline-offset: 0.2rem;
+    text-decoration: underline;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.cookie-settings-link:hover,
+.cookie-settings-link:focus-visible {
+    color: var(--text-color);
+}
+
+.cookie-banner-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.cookie-banner-buttons .btn {
+    min-width: 11rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.72rem;
+}
+
+.btn-cookie-decline {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .btn-cookie-decline {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-cookie-decline:hover,
+.btn-cookie-decline:focus-visible {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-cookie-accept {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+.btn-cookie-accept:hover,
+.btn-cookie-accept:focus-visible {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: #fff;
+}
+
+[data-theme="dark"] .btn-cookie-accept {
+    color: #171614 !important;
+}
+
+@media (max-width: 60rem) {
+    .cookie-banner {
+        padding: 1.25rem 1.25rem;
+    }
+    .cookie-banner-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .cookie-banner-buttons {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* GDPR Request Container */
+.delete-request-container {
+    margin-top: 1.25rem;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 1.25rem;
 }
